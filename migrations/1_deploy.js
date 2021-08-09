@@ -8,6 +8,14 @@ const fs = require('fs');
 const deploy_path = `${__dirname}/../out/deploy.json`;
 const pub_path = `${__dirname}/../out/deploy_pub.json`;
 
+function updateAddress(name, addr) {
+	var deploy_pub = {};
+	if (fs.existsSync(pub_path))
+		deploy_pub = JSON.parse(fs.readFileSync(pub_path, 'utf-8'));
+	deploy_pub[name] = addr;
+	fs.writeFileSync(pub_path, JSON.stringify(deploy_pub, null, 2));
+}
+
 async function upgradeDeploy(name, Contract, args, opts) {
 	var deploy = {}, pub_json = {};
 	var deployer = opts.deployer;
@@ -40,22 +48,19 @@ async function upgradeDeploy(name, Contract, args, opts) {
 	};
 	fs.writeFileSync(deploy_path, JSON.stringify(deploy, null, 2));
 
-	var pub_json = {};
-	for (var [k,v] of Object.entries(deploy)) {
-		pub_json[k] = v.address;
-	}
-	fs.writeFileSync(pub_path, JSON.stringify(pub_json, null, 2));
-
 	return pub;
 }
 
 async function deploy(deployer, name, Contract, args, opts) {
+	var c;
 	if (process.env.UPGRADE == 'true') { // 使用升级方式部署协约
-		return upgradeDeploy(name, Contract, args, opts);
+		c = await upgradeDeploy(name, Contract, args, opts);
 	} else { // 使用普通方式部署协约每次部署协约地址都会发生改变
 		await deployer.deploy(Contract, args, opts);
-		return Contract;
+		c = Contract;
 	}
+	updateAddress(name, c.address);
+	return c;
 }
 
 module.exports = async function(deployer, networks, accounts) {
