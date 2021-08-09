@@ -1,24 +1,24 @@
 
 var ERC721Proxy = artifacts.require("ERC721Proxy.sol");
 var ERC721 = artifacts.require("ERC721.sol");
-var pkg = require('../package.json');
 
 const { deployProxy, upgradeProxy, prepareUpgrade } = require('@openzeppelin/truffle-upgrades');
 
 const fs = require('fs');
-const cached = `${process.env.HOME || '/tmp'}/.${pkg.name}`;
+const deploy_path = `${__dirname}/../out/deploy.json`;
+const pub_path = `${__dirname}/../out/deploy_pub.json`;
 
 async function upgradeDeploy(name, Contract, args, opts) {
-	var caches = {};
+	var deploy = {}, pub_json = {};
 	var deployer = opts.deployer;
 
-	if (fs.existsSync(cached)) {
+	if (fs.existsSync(deploy_path)) {
 		try {
-			caches = JSON.parse(fs.readFileSync(cached, 'utf-8'));
+			deploy = JSON.parse(fs.readFileSync(deploy_path, 'utf-8'));
 		} catch(err) {}
 	}
 
-	var pub, cache = caches[name];
+	var pub, cache = deploy[name];
 
 	if (cache && cache.address) {
 		pub = new Contract(cache.address);
@@ -35,10 +35,16 @@ async function upgradeDeploy(name, Contract, args, opts) {
 
 	await upgradeProxy(pub.address, Contract, {deployer}); // 部署实现 impl
 
-	caches[name] = {
+	deploy[name] = {
 		address: pub.address, impl: await prepareUpgrade(pub.address, Contract, {deployer}),
 	};
-	fs.writeFileSync(cached, JSON.stringify(caches, null, 2));
+	fs.writeFileSync(deploy_path, JSON.stringify(deploy, null, 2));
+
+	var pub_json = {};
+	for (var [k,v] of Object.entries(deploy)) {
+		pub_json[k] = v.address;
+	}
+	fs.writeFileSync(pub_path, JSON.stringify(pub_json, null, 2));
 
 	return pub;
 }
