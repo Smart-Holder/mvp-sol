@@ -5,7 +5,7 @@
 	"author": "louistru@hotmail.com",
 	"private": true,
 	"scripts": {
-		"abi": "truffle compile && node tools/abi.js",
+		"build": "truffle compile && node build_abi.js",
 		"deploy": "truffle deploy",
 		"deploy2": "UPGRADE=true truffle deploy"
 	},
