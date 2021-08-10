@@ -20,13 +20,6 @@ contract ERC721Proxy is IERC721Receiver, NFTProxy, Proxyable {
 	bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
 	bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
 
-	event Transfer(
-		address indexed from,
-		address indexed to,
-		address indexed token,
-		uint256 tokenId
-	);
-
 	function initialize() external {
 		__Proxyable_init();
 	}
@@ -59,6 +52,10 @@ contract ERC721Proxy is IERC721Receiver, NFTProxy, Proxyable {
 
 		_supply(from, token, tokenId, data);
 		return _ERC721_RECEIVED;
+	}
+
+	function deposit(address to, address token, uint256 tokenId) public override {
+		require(IERC721(token).ownerOf(tokenId) == msg.sender, "#ERC721Proxy#deposit: NOT_OWN_TOKEN");
 	}
 
 	function _supply(
@@ -109,7 +106,7 @@ contract ERC721Proxy is IERC721Receiver, NFTProxy, Proxyable {
 		emit Transfer(from, to, token, tokenId);
 	}
 
-	function ownerOf(address token, uint256 tokenId) external view override returns(address) {
+	function ownerOf(address token, uint256 tokenId) public view override returns(address) {
 		return assets[token][tokenId];
 	}
 

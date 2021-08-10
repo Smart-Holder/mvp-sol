@@ -5,9 +5,9 @@
 	"author": "louistru@hotmail.com",
 	"private": true,
 	"scripts": {
-		"build": "truffle compile && node build_abi.js",
-		"deploy": "truffle deploy",
-		"deploy2": "UPGRADE=true truffle deploy"
+		"build": "rm -rf out/truffle && truffle compile && node build_abi.js",
+		"deploy": "rm -rf out/truffle && truffle deploy",
+		"deploy2": "rm -rf out/truffle && UPGRADE=true truffle deploy"
 	},
 	"devDependencies": {
 		"somes": "~0.10.119",

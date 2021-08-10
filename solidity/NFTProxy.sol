@@ -19,26 +19,34 @@ abstract contract NFTProxy {
 		Signature rsv;
 	}
 
-	function ownerOf(address token, uint256 tokenId) virtual external view returns(address);
+	event Transfer(
+		address indexed from,
+		address indexed to,
+		address indexed token,
+		uint256 tokenId
+	);
+
+	function deposit(address to, address token, uint256 tokenId) virtual public;
 	function _withdraw(address from, address to, address token, uint256 tokenId) virtual internal;
 	function _transfer(address from, address to, address token, uint256 tokenId) virtual internal;
+	function ownerOf(address token, uint256 tokenId) virtual public view returns(address);
 
-	function withdraw(address to, address token, uint256 tokenId) external {
+	function withdraw(address to, address token, uint256 tokenId) public {
 		_withdraw(msg.sender, to, token, tokenId);
 	}
 
-	function transfer(address to, address token, uint256 tokenId) external {
+	function transfer(address to, address token, uint256 tokenId) public {
 		_transfer(msg.sender, to, token, tokenId);
 	}
 
-	function withdrawFrom(TransferTx memory tx) external {
+	function withdrawFrom(TransferTx memory tx) public {
 		require(tx.expiry > block.timestamp, "#NFTProxy#withdrawFrom: TRANSFER_EXPIRY");
 		bytes32 hash = keccak256(abi.encodePacked(tx.token, tx.tokenId, tx.to, tx.expiry));
 		address from = ecrecover(hash, tx.rsv.v, tx.rsv.r, tx.rsv.s);
 		_withdraw(from, tx.to, tx.token, tx.tokenId);
 	}
 
-	function transferFrom(TransferTx memory tx) external {
+	function transferFrom(TransferTx memory tx) public { // external {
 		require(tx.expiry > block.timestamp, "#NFTProxy#transferFrom: TRANSFER_EXPIRY");
 		bytes32 hash = keccak256(abi.encodePacked(tx.token, tx.tokenId, tx.to, tx.expiry));
 		address from = ecrecover(hash, tx.rsv.v, tx.rsv.r, tx.rsv.s);
