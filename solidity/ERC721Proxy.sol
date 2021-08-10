@@ -64,15 +64,17 @@ contract ERC721Proxy is IERC721Receiver, NFTProxy, Proxyable {
 		uint256 tokenId,
 		bytes memory data
 	) private {
-		require(from != address(0), "#ERC721Proxy#_supply: FROM_IS_EMPTY");
+		// require(from != address(0), "#ERC721Proxy#_supply: FROM_IS_EMPTY");
 		require(assets[address(token)][tokenId] == address(0), "#ERC721Proxy#_supply: OWNER_NOT_EMPTY");
 
 		address to;
-		bytes memory other;
-		(to, other) = abi.decode(data, (address, bytes));
+		(to) = abi.decode(data, (address));
 
-		if (to == address(0))
+		if (to == address(0)) {
 			to = from;
+		}
+
+		require(to != address(0), "#ERC721Proxy#_supply: OWN_IS_EMPTY");
 
 		assets[address(token)][tokenId] = to;
 
