@@ -54,7 +54,7 @@ contract ERC721Proxy is IERC721Receiver, NFTProxy, Proxyable {
 		return _ERC721_RECEIVED;
 	}
 
-	function deposit(address to, address token, uint256 tokenId) public override {
+	function deposit(address to, address token, uint256 tokenId, uint256 amount) public override {
 		require(IERC721(token).ownerOf(tokenId) == msg.sender, "#ERC721Proxy#deposit: NOT_OWN_TOKEN");
 	}
 
@@ -78,38 +78,40 @@ contract ERC721Proxy is IERC721Receiver, NFTProxy, Proxyable {
 
 		assets[address(token)][tokenId] = to;
 
-		emit Transfer(address(0), to, address(token), tokenId);
+		emit Transfer(address(0), to, address(token), tokenId, 0, 1);
 	}
 
-	function _withdraw(address from, address to, address token, uint256 tokenId) internal override {
+	function _withdraw(address from, address to, address token, uint256 tokenId, uint256 amount) internal override {
 		address assetOwner = assets[token][tokenId];
 		require(
 			assetOwner != address(0),
 			"#ERC721Proxy#_withdraw: NOT_FOUND_ASSET"
 		);
 		require(assetOwner == from, "#ERC721Proxy#_withdraw: NO_ACCESS");
+		require(amount == 1, "#ERC721Proxy#_transfer: AMOUNT_ONLY_BE_1");
 
 		delete assets[token][tokenId];
 		IERC721(token).safeTransferFrom(address(this), to, tokenId);
 
-		emit Transfer(from, address(0), token, tokenId);
+		emit Transfer(from, address(0), token, tokenId, 0, 1);
 	}
 
-	function _transfer(address from, address to, address token, uint256 tokenId) internal override {
+	function _transfer(address from, address to, address token, uint256 tokenId, uint256 amount) internal override {
 		address assetOwner = assets[token][tokenId];
 		require(
 			assetOwner != address(0),
 			"#ERC721Proxy#_transfer: NOT_FOUND_ASSET"
 		);
 		require(assetOwner == from, "#ERC721Proxy#_transfer: NO_ACCESS");
+		require(amount == 1, "#ERC721Proxy#_transfer: AMOUNT_ONLY_BE_1");
 
 		assets[token][tokenId] = to;
 
-		emit Transfer(from, to, token, tokenId);
+		emit Transfer(from, to, token, tokenId, 0, 1);
 	}
 
-	function ownerOf(address token, uint256 tokenId) public view override returns(address) {
-		return assets[token][tokenId];
+	function balanceOf(address token, uint256 tokenId, address owner) public view override returns(uint256) {
+		return assets[token][tokenId] == owner ? 1: 0;
 	}
 
 }

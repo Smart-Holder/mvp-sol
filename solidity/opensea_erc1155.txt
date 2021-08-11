@@ -10,8 +10,8 @@
 #  All the rest is below.
 #
 
-const unknown4060b25e = '2.0.0'
-const unknownc311c523 = 1
+# 0x495f947276749ce646f68ac8c248420045cb7b5e
+
 
 def storage:
   stor0 is mapping of uint256 at storage 0
@@ -50,12 +50,6 @@ def symbol() payable:
 def totalSupply(uint256 _id) payable: 
   require calldata.size - 4 >= 32
   return totalSupply[_id]
-
-def unknowncd7c0326() payable: 
-  return unknowncd7c0326Address
-
-def unknownf923e8c3() payable: 
-  return unknownf923e8c3[0 len unknownf923e8c3.length]
 
 #
 #  Regular functions
