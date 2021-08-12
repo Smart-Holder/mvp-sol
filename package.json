@@ -6,7 +6,7 @@
 	"private": true,
 	"scripts": {
 		"build": "rm -rf out/truffle && truffle compile && node build_abi.js",
-		"publish": "rm -rf out/truffle && truffle deploy",
+		"publish": "rm -rf out/truffle && UPGRADE=fasle truffle deploy",
 		"publish2": "rm -rf out/truffle && UPGRADE=true truffle deploy"
 	},
 	"devDependencies": {
