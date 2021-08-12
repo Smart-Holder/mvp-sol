@@ -1,6 +1,8 @@
 
-var ERC721Proxy = artifacts.require("ERC721Proxy.sol");
 var ERC721 = artifacts.require("ERC721.sol");
+var ERC1155 = artifacts.require("ERC1155.sol");
+var ERC721Proxy = artifacts.require("ERC721Proxy.sol");
+var ERC1155Proxy = artifacts.require("ERC1155Proxy.sol");
 
 const { deployProxy, upgradeProxy, prepareUpgrade } = require('@openzeppelin/truffle-upgrades');
 
@@ -17,7 +19,7 @@ function updateAddress(name, addr) {
 }
 
 async function upgradeDeploy(name, Contract, args, opts) {
-	var deploy = {}, pub_json = {};
+	var deploy = {};
 	var deployer = opts.deployer;
 
 	if (fs.existsSync(deploy_path)) {
@@ -69,9 +71,14 @@ module.exports = async function(deployer, networks, accounts) {
 	// https://docs.openzeppelin.com/upgrades-plugins/1.x/faq#why-cant-i-use-custom-types
 	opts = { deployer, initializer: 'initialize', unsafeAllowCustomTypes: true };
 	// TODO: check storage layout
-	var erc721_proxy = await deploy(deployer, 'ERC721Proxy', ERC721Proxy, [], opts);
 	var erc721 = await deploy(deployer, 'ERC721', ERC721, [], opts);
+	var erc1155 = await deploy(deployer, 'ERC1155', ERC1155, [], opts);
+	var erc721_proxy = await deploy(deployer, 'ERC721Proxy', ERC721Proxy, [], opts);
+	var erc1155_proxy = await deploy(deployer, 'ERC1155Proxy', ERC1155Proxy, [], opts);
 
-	console.log("ERC721Proxy:", erc721_proxy.address);
 	console.log("ERC721      :", erc721.address);
+	console.log("ERC1155     :", erc1155.address);
+	console.log("ERC721Proxy :", erc721_proxy.address);
+	console.log("ERC1155Proxy:", erc1155_proxy.address);
+
 };

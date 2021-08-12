@@ -7,28 +7,27 @@ pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/IERC721.sol";
-import "@openzeppelin/contracts-ethereum-package/contracts/utils/Address.sol";
-import { NFTProxy } from './NFTProxy.sol';
-import { Proxyable } from './Proxyable.sol';
+import './NFTProxy.sol';
+import './base.sol';
 
-contract ERC721Proxy is IERC721Receiver, NFTProxy, Proxyable {
+contract ERC721Proxy is IERC721Receiver, NFTProxy {
 	using Address for address;
 
-	// nft token address => map( tokenID => owner )
+	// token => map( tokenID => owner )
 	mapping(address => mapping(uint256 => address)) assets;
 
 	bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
 	bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
 
-	function initialize() external {
-		__Proxyable_init();
+	function initialize() public {
+		__NFTProxy_init();
 	}
 
 	// @dev convert addr to standard ERC721 NFT,will be revered if add is invalid.
 	function _isERC721(address addr) internal view returns (IERC721) {
 		require(
 			addr.isContract(),
-			"#Exchange#_isERC721: INVLIAD_CONTRACT_ADDRESS"
+			"#ERC721Proxy#_isERC721: INVLIAD_CONTRACT_ADDRESS"
 		);
 		require(
 			IERC721(addr).supportsInterface(_INTERFACE_ID_ERC721),
@@ -38,71 +37,44 @@ contract ERC721Proxy is IERC721Receiver, NFTProxy, Proxyable {
 	}
 
 	function onERC721Received(
-			address,
-			address from,
-			uint256 tokenId,
-			bytes memory data
+			address operator, address from, uint256 tokenId, bytes memory data
 	) external override returns (bytes4) {
-		//check
 		IERC721 token = _isERC721(msg.sender);
-		require(
-			token.ownerOf(tokenId) == address(this),
-			"#ERC721Proxy#onERC721Received: NOT_OWN_TOKEN"
-		);
-
-		_supply(from, token, tokenId, data);
-		return _ERC721_RECEIVED;
-	}
-
-	function deposit(address to, address token, uint256 tokenId, uint256 amount) public override {
-		require(IERC721(token).ownerOf(tokenId) == msg.sender, "#ERC721Proxy#deposit: NOT_OWN_TOKEN");
-	}
-
-	function _supply(
-		address from,
-		IERC721 token,
-		uint256 tokenId,
-		bytes memory data
-	) private {
-		// require(from != address(0), "#ERC721Proxy#_supply: FROM_IS_EMPTY");
-		require(assets[address(token)][tokenId] == address(0), "#ERC721Proxy#_supply: OWNER_NOT_EMPTY");
+		require(token.ownerOf(tokenId) == address(this), "#ERC721Proxy#onERC721Received: NOT_OWN_TOKEN");
 
 		address to;
 		(to) = abi.decode(data, (address));
-
 		if (to == address(0)) {
 			to = from;
 		}
+		require(to != address(0), "#ERC721Proxy#onERC721Received: TO_IS_EMPTY");
 
-		require(to != address(0), "#ERC721Proxy#_supply: OWN_IS_EMPTY");
-
-		assets[address(token)][tokenId] = to;
+		assets[address(token)][tokenId] = to; // assign
 
 		emit Transfer(address(0), to, address(token), tokenId, 0, 1);
+
+		return _ERC721_RECEIVED;
 	}
 
-	function _withdraw(address from, address to, address token, uint256 tokenId, uint256 amount) internal override {
-		address assetOwner = assets[token][tokenId];
-		require(
-			assetOwner != address(0),
-			"#ERC721Proxy#_withdraw: NOT_FOUND_ASSET"
-		);
-		require(assetOwner == from, "#ERC721Proxy#_withdraw: NO_ACCESS");
-		require(amount == 1, "#ERC721Proxy#_transfer: AMOUNT_ONLY_BE_1");
+	function _withdraw(
+		address from, address to, address token, uint256 tokenId, uint256 amount, bytes memory _data
+	) internal override {
+		address owner = assets[token][tokenId];
+		require(owner != address(0), "#ERC721Proxy#_withdraw: NOT_FOUND_ASSET");
+		require(owner == from, "#ERC721Proxy#_withdraw: NO_ACCESS");
+		require(amount == 1, "#ERC721Proxy#_withdraw: AMOUNT_ONLY_BE_1");
 
 		delete assets[token][tokenId];
-		IERC721(token).safeTransferFrom(address(this), to, tokenId);
+
+		IERC721(token).safeTransferFrom(address(this), to, tokenId, _data);
 
 		emit Transfer(from, address(0), token, tokenId, 0, 1);
 	}
 
 	function _transfer(address from, address to, address token, uint256 tokenId, uint256 amount) internal override {
-		address assetOwner = assets[token][tokenId];
-		require(
-			assetOwner != address(0),
-			"#ERC721Proxy#_transfer: NOT_FOUND_ASSET"
-		);
-		require(assetOwner == from, "#ERC721Proxy#_transfer: NO_ACCESS");
+		address owner = assets[token][tokenId];
+		require(owner != address(0), "#ERC721Proxy#_transfer: NOT_FOUND_ASSET");
+		require(owner == from, "#ERC721Proxy#_transfer: NO_ACCESS");
 		require(amount == 1, "#ERC721Proxy#_transfer: AMOUNT_ONLY_BE_1");
 
 		assets[token][tokenId] = to;
