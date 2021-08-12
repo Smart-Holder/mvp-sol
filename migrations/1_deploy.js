@@ -61,7 +61,14 @@ async function deploy(deployer, name, Contract, args, opts) {
 		await deployer.deploy(Contract, args, opts);
 		c = Contract;
 	}
+
+	var abi_json = JSON.stringify(c.abi, null, 2);
+
+	fs.mkdirSync(`${__dirname}/../out/abi`, {recursive: true});
+	fs.writeFileSync(`${__dirname}/../out/abi/${c.address}.json`, abi_json);
+
 	updateAddress(name, c.address);
+
 	return c;
 }
 
@@ -81,4 +88,5 @@ module.exports = async function(deployer, networks, accounts) {
 	console.log("ERC721Proxy :", erc721_proxy.address);
 	console.log("ERC1155Proxy:", erc1155_proxy.address);
 
+	require('../build_abi');
 };
