@@ -58,8 +58,9 @@ contract('1155', (accounts) => {
 		});
 
 		it('call erc1155 safeBatchTransferFrom to ERC1155Proxy', async () => {
+			var _ids = ids.slice(1);
 			var amounts = [];
-			for (var id of ids.slice(1)) {
+			for (var id of _ids) {
 				amounts.push((await ERC1155.balanceOf(from, id)).toNumber());
 			}
 			await ERC1155.safeBatchTransferFrom(
