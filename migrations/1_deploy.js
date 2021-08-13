@@ -89,4 +89,6 @@ module.exports = async function(deployer, networks, accounts) {
 	console.log("ERC1155Proxy:", erc1155_proxy.address);
 
 	require('../build_abi');
+
+	console.log('\n\n');
 };

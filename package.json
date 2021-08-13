@@ -8,8 +8,8 @@
 		"build": "rm -rf out/truffle && truffle compile && node build_abi.js",
 		"publish": "rm -rf out/truffle && UPGRADE=fasle truffle deploy",
 		"publish2": "rm -rf out/truffle && UPGRADE=true truffle deploy",
-		"test": "rm -rf out/truffle && UPGRADE=true truffle test --network development",
-		"test2": "rm -rf out/truffle && UPGRADE=true node --inspect-brk=9999 `which truffle` test --network development"
+		"test": "UPGRADE=true truffle test --compile-none --network development",
+		"test2": "UPGRADE=true node --inspect-brk=9999 `which truffle` test --compile-none --network development"
 	},
 	"dependencies": {
 		"@openzeppelin/contracts": "^3.4.1",

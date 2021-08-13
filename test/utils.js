@@ -3,11 +3,12 @@ var fs = require('fs');
 var somes = require('somes').default;
 var crypto_tx = require('somes').default;
 
+var ERC721 = artifacts.require("ERC721.sol");
+var ERC1155 = artifacts.require("ERC1155.sol");
+var ERC721Proxy = artifacts.require("ERC721Proxy.sol");
+var ERC1155Proxy = artifacts.require("ERC1155Proxy.sol");
+
 function create(from) {
-	var ERC721 = artifacts.require("ERC721.sol");
-	var ERC1155 = artifacts.require("ERC1155.sol");
-	var ERC721Proxy = artifacts.require("ERC721Proxy.sol");
-	var ERC1155Proxy = artifacts.require("ERC1155Proxy.sol");
 	var addr = JSON.parse(fs.readFileSync(`${__dirname}/../out/deploy_pub.json`, 'utf-8'));
 	return {
 		ERC721: new ERC721(addr.ERC721, {from}),

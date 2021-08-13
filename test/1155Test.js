@@ -5,16 +5,12 @@ var utils = require('./utils');
 
 contract('1155', (accounts) => {
 	var [from,to] = accounts;
-	var ERC1155, ERC1155Proxy;
+	var {ERC1155, ERC1155Proxy} = utils.create(from);
 
 	before(async () => {
-		var app = utils.create(from);
-		ERC1155 = app.ERC1155;
-		ERC1155Proxy = app.ERC1155Proxy;
-	})
+	});
 
 	context('ERC1155 and ERC1155Proxy', () =>{
-
 		var ids = [];
 
 		before(async () => {
