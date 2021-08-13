@@ -2,7 +2,7 @@
 pragma solidity ^0.6.12;
 pragma experimental ABIEncoderV2;
 
-import './base.sol';
+import './Base.sol';
 import './NFTProxy.sol';
 
 contract ERC1155Proxy is IERC1155Receiver, NFTProxy {
@@ -96,7 +96,7 @@ contract ERC1155Proxy is IERC1155Receiver, NFTProxy {
 	) internal override {
 		Balances storage ba = _balances[token][tokenId];
 
-		require(ba.values[from] < amount, "#ERC1155Proxy#_withdraw: INSUFFICIENT_BALANCES");
+		require(amount <= ba.values[from], "#ERC1155Proxy#_withdraw: INSUFFICIENT_BALANCES");
 		require(amount > 0, "#ERC1155Proxy#_withdraw: INVALID_AMOUNT");
 
 		uint256 formBalances = ba.values[from] - amount;
@@ -112,7 +112,7 @@ contract ERC1155Proxy is IERC1155Receiver, NFTProxy {
 	function _transfer(address from, address to, address token, uint256 tokenId, uint256 amount) internal override {
 		Balances storage ba = _balances[token][tokenId];
 
-		require(ba.values[from] < amount, "#ERC1155Proxy#_transfer: INSUFFICIENT_BALANCES");
+		require(amount <= ba.values[from], "#ERC1155Proxy#_transfer: INSUFFICIENT_BALANCES");
 		require(amount > 0, "#ERC1155Proxy#_transfer: INVALID_AMOUNT");
 
 		uint256 formBalances = ba.values[from] - amount;

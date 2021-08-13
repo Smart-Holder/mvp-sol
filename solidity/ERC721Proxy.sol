@@ -8,7 +8,7 @@ pragma experimental ABIEncoderV2;
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/IERC721.sol";
 import './NFTProxy.sol';
-import './base.sol';
+import './Base.sol';
 
 contract ERC721Proxy is IERC721Receiver, NFTProxy {
 	using Address for address;

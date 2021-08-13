@@ -2,7 +2,8 @@
 // pragma solidity ^0.7.5;
 pragma solidity ^0.6.12;
 pragma experimental ABIEncoderV2;
-import './base.sol';
+
+import './Base.sol';
 
 abstract contract NFTProxy is Proxyable {
 

@@ -1,7 +1,7 @@
 
 pragma solidity ^0.6.12;
 
-import './base.sol';
+import './Base.sol';
 import "@openzeppelin/contracts-ethereum-package/contracts/math/SafeMath.sol";
 
 /**

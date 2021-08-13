@@ -7,13 +7,16 @@
 	"scripts": {
 		"build": "rm -rf out/truffle && truffle compile && node build_abi.js",
 		"publish": "rm -rf out/truffle && UPGRADE=fasle truffle deploy",
-		"publish2": "rm -rf out/truffle && UPGRADE=true truffle deploy"
+		"publish2": "rm -rf out/truffle && UPGRADE=true truffle deploy",
+		"test": "rm -rf out/truffle && UPGRADE=true truffle test --network development",
+		"test2": "rm -rf out/truffle && UPGRADE=true node --inspect-brk=9999 `which truffle` test --network development"
 	},
-	"devDependencies": {
-		"somes": "~0.10.119",
+	"dependencies": {
 		"@openzeppelin/contracts": "^3.4.1",
 		"@openzeppelin/contracts-ethereum-package": "^3.0.0",
 		"@openzeppelin/truffle-upgrades": "^1.3.1",
+		"chai": "^4.3.4",
+		"crypto-tx": "^0.4.5",
 		"solidity-coverage": "^0.7.13",
 		"solidity-docgen": "^0.5.10",
 		"truffle": "~5.1.60"
