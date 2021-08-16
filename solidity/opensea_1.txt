@@ -1,0 +1,385 @@
+#
+#  Panoramix v4 Oct 2019 
+#  Decompiled source of 0x9C4e9CCE4780062942a7fe34FA2Fa7316c872956
+# 
+#  Let's make the world open source 
+# 
+#
+#  I failed with these: 
+#  - text(bytes32 _node, string _key)
+#  All the rest is below.
+#
+
+const unknown4060b25e = '1.0.0'
+
+def storage:
+  owner is addr at storage 0
+  stor1 is array of uint256 at storage 1
+  addr is mapping of addr at storage 2
+  unknownbc1c58d1 is array of uint256 at storage 3
+  stor4 is mapping of addr at storage 4
+  name is mapping of uint256 at storage 5
+  pubkey is mapping of struct at storage 6
+  stor7 is array of uint256 at storage 7
+  stor8 is addr at storage 8
+  stor9 is mapping of uint8 at storage 9
+  stor10 is uint256 at storage 10
+  baseURI is array of uint256 at storage 11
+  unknownc9cb65e1 is mapping of uint256 at storage 12
+
+def addr(bytes32 _node) payable: 
+  require calldata.size - 4 >= 32
+  return addr[_node]
+
+def name(bytes32 _param1) payable: 
+  return name[_param1][0 len name[_param1].length]
+
+def baseURI() payable: 
+  return baseURI[0 len baseURI.length]
+
+def owner() payable: 
+  return owner
+
+def unknownbc1c58d1(uint256 _param1) payable: 
+  return unknownbc1c58d1[_param1][0 len unknownbc1c58d1[_param1].length]
+
+def pubkey(bytes32 _node) payable: 
+  require calldata.size - 4 >= 32
+  return pubkey[_node].field_0, pubkey[_node].field_256
+
+def unknownc9cb65e1(uint256 _param1) payable: 
+  require calldata.size - 4 >= 32
+  return unknownc9cb65e1[_param1]
+
+def unknownf86bc879(uint256 _param1, addr _param2, addr _param3) payable: 
+  require calldata.size - 4 >= 96
+  return bool(stor9[_param1][_param2][_param3])
+
+#
+#  Regular functions
+#
+
+def _fallback() payable: # default function
+  revert
+
+def isOwner() payable: 
+  return (caller == owner)
+
+def unknownfd0d101f(uint256 _param1) payable: 
+  require calldata.size - 4 >= 32
+  unknownc9cb65e1[stor10][_param1] = _param1
+
+def renounceOwnership() payable: 
+  if owner != caller:
+      revert with 0, 'Ownable: caller is not the owner'
+  log OwnershipTransferred(
+        address previousOwner=owner,
+        address newOwner=0)
+  owner = 0
+
+def unknown3e9ce794(uint256 _param1, addr _param2, bool _param3) payable: 
+  require calldata.size - 4 >= 96
+  stor9[_param1][caller][addr(_param2)] = uint8(_param3)
+  log 0xe1c5610a: _param3, _param1, caller, _param2
+
+def setBaseURI(string _baseURI) payable: 
+  require calldata.size - 4 >= 32
+  require _baseURI <= 4294967296
+  require _baseURI + 36 <= calldata.size
+  require _baseURI.length <= 4294967296 and _baseURI + _baseURI.length + 36 <= calldata.size
+  if owner != caller:
+      revert with 0, 'Ownable: caller is not the owner'
+  baseURI[] = Array(len=_baseURI.length, data=_baseURI[all])
+
+def transferOwnership(address _newOwner) payable: 
+  require calldata.size - 4 >= 32
+  if owner != caller:
+      revert with 0, 'Ownable: caller is not the owner'
+  if not _newOwner:
+      revert with 0x8c379a000000000000000000000000000000000000000000000000000000000, 
+                  32,
+                  38,
+                  0x294f776e61626c653a206e6577206f776e657220697320746865207a65726f20616464726573,
+                  mem[202 len 26]
+  log OwnershipTransferred(
+        address previousOwner=owner,
+        address newOwner=_newOwner)
+  owner = _newOwner
+
+def setAddr(bytes32 _node, address _addr) payable: 
+  require calldata.size - 4 >= 64
+  require ext_code.size(stor8)
+  static call stor8.owner(bytes32 symbol) with:
+          gas gas_remaining wei
+         args _node
+  if not ext_call.success:
+      revert with ext_call.return_data[0 len return_data.size]
+  require return_data.size >= 32
+  if ext_call.return_data[12 len 20] != caller:
+      require stor9[_node][addr(ext_call.return_data)][caller]
+  addr[_node] = _addr
+  log AddrChanged(
+        bytes32 node=_addr,
+        address a=_node)
+
+def unknowne59d895d(uint256 _param1, uint32 _param2, addr _param3) payable: 
+  require calldata.size - 4 >= 96
+  require ext_code.size(stor8)
+  static call stor8.owner(bytes32 symbol) with:
+          gas gas_remaining wei
+         args _param1
+  if not ext_call.success:
+      revert with ext_call.return_data[0 len return_data.size]
+  require return_data.size >= 32
+  if ext_call.return_data[12 len 20] != caller:
+      require stor9[_param1][addr(ext_call.return_data)][caller]
+  stor4[_param1][Mask(32, 224, _param2)] = _param3
+  log 0x7c69f06b: _param3, _param1, Mask(32, 224, _param2)
+
+def setPubkey(bytes32 _node, bytes32 _x, bytes32 _y) payable: 
+  require calldata.size - 4 >= 96
+  require ext_code.size(stor8)
+  static call stor8.owner(bytes32 symbol) with:
+          gas gas_remaining wei
+         args _node
+  if not ext_call.success:
+      revert with ext_call.return_data[0 len return_data.size]
+  require return_data.size >= 32
+  if ext_call.return_data[12 len 20] != caller:
+      require stor9[_node][addr(ext_call.return_data)][caller]
+  pubkey[_node].field_0 = _x
+  pubkey[_node].field_256 = _y
+  log PubkeyChanged(
+        bytes32 node=_x,
+        bytes32 x=_y,
+        bytes32 y=_node)
+
+def supportsInterface(bytes4 _interfaceId) payable: 
+  require calldata.size - 4 >= 32
+  if Mask(32, 224, _interfaceId) == 0x59d1d43c00000000000000000000000000000000000000000000000000000000:
+      return True
+  if Mask(32, 224, _interfaceId) == 0xc869023300000000000000000000000000000000000000000000000000000000:
+      return True
+  if Mask(32, 224, _interfaceId) == 0x691f343100000000000000000000000000000000000000000000000000000000:
+      return True
+  if Mask(32, 224, _interfaceId) == Mask(32, 224, sha3(0xfe696e74657266616365496d706c656d656e74657228627974657333322c627974657334)):
+      return True
+  if Mask(32, 224, _interfaceId) == 0xbc1c58d100000000000000000000000000000000000000000000000000000000:
+      return True
+  if Mask(32, 224, _interfaceId) == 0x3b3b57de00000000000000000000000000000000000000000000000000000000:
+      return True
+  if Mask(32, 224, _interfaceId) == 0x2203ab5600000000000000000000000000000000000000000000000000000000:
+      return True
+  return (Mask(32, 224, _interfaceId) == 0x1ffc9a700000000000000000000000000000000000000000000000000000000)
+
+def unknown124a319c(uint256 _param1, uint32 _param2) payable: 
+  require calldata.size - 4 >= 64
+  if stor4[_param1][Mask(32, 224, _param2)]:
+      return stor4[_param1][Mask(32, 224, _param2)]
+  if not addr[_param1]:
+      return 0
+  static call addr[_param1] with:
+       funct Mask(32, 224, supportsInterface(bytes4 interfaceId), 0x1ffc9a70000000000000000000000000000000000000000) >> 224
+          gas gas_remaining wei
+         args Mask(224, 0, supportsInterface(bytes4 interfaceId), 0x1ffc9a70000000000000000000000000000000000000000), mem[196 len 4]
+  if not return_data.size:
+      return 0
+  if not ext_call.success:
+      return 0
+  if return_data.size < 32:
+      return 0
+  require 31 < return_data.size
+  if not Mask(8, 32, supportsInterface(bytes4 interfaceId), 0x1ffc9a70000000000000000000000000000000000000000):
+      return 0
+  static call addr[_param1] with:
+          gas gas_remaining wei
+         args Mask(224, 0, supportsInterface(bytes4 interfaceId), Mask(32, 224, _param2) >> 32), mem[ceil32(return_data.size) + 265 len 4]
+  if not return_data.size:
+      return 0
+  if not ext_call.success:
+      return 0
+  if return_data.size < 32:
+      return 0
+  require 31 < return_data.size
+  return 0
+
+def unknown304e6ade() payable: 
+  require calldata.size - 4 >= 64
+  require cd <= 4294967296
+  require cd <= calldata.size
+  require ('cd', 36).length <= 4294967296 and cd('cd', 36).length + 36 <= calldata.size
+  require ext_code.size(stor8)
+  static call stor8.owner(bytes32 symbol) with:
+          gas gas_remaining wei
+         args cd[4]
+  if not ext_call.success:
+      revert with ext_call.return_data[0 len return_data.size]
+  require return_data.size >= 32
+  if ext_call.return_data[12 len 20] != caller:
+      require stor9[cd][addr(ext_call.return_data)][caller]
+  unknownbc1c58d1[cd] = (2 * ('cd', 36).length) + 1
+  s = 0
+  idx = cd[36] + 36
+  while cd('cd', 36).length + 36 > idx:
+      unknownbc1c58d1[cd][s] = cd[idx]
+      s = s + 1
+      idx = idx + 32
+      continue 
+  idx = Mask(251, 0, ('cd', 36).length + 31) >> 5
+  while unknownbc1c58d1[cd].length + 31 / 32 > idx:
+      unknownbc1c58d1[cd][idx] = 0
+      idx = idx + 1
+      continue 
+  log 0xe379c162: Array(len=('cd', 36).length, data=call.data[cd
+
+def setName(bytes32 _node, string _name) payable: 
+  require calldata.size - 4 >= 64
+  require _name <= 4294967296
+  require _name + 36 <= calldata.size
+  require _name.length <= 4294967296 and _name + _name.length + 36 <= calldata.size
+  require ext_code.size(stor8)
+  static call stor8.owner(bytes32 symbol) with:
+          gas gas_remaining wei
+         args _node
+  if not ext_call.success:
+      revert with ext_call.return_data[0 len return_data.size]
+  require return_data.size >= 32
+  if ext_call.return_data[12 len 20] != caller:
+      require stor9[_node][addr(ext_call.return_data)][caller]
+  name[_node] = (2 * _name.length) + 1
+  s = 0
+  idx = _name + 36
+  while _name + _name.length + 36 > idx:
+      name[_node][s] = cd[idx]
+      s = s + 1
+      idx = idx + 32
+      continue 
+  idx = Mask(251, 0, _name.length + 31) >> 5
+  while name[_node].length + 31 / 32 > idx:
+      name[_node][idx] = 0
+      idx = idx + 1
+      continue 
+  log NameChanged(
+        bytes32 node=Array(len=_name.length, data=_name[all]),
+        string name=_node)
+
+def setABI(bytes32 _node, uint256 _contentType, bytes _data) payable: 
+  require calldata.size - 4 >= 96
+  require _data <= 4294967296
+  require _data + 36 <= calldata.size
+  require _data.length <= 4294967296 and _data + _data.length + 36 <= calldata.size
+  require ext_code.size(stor8)
+  static call stor8.owner(bytes32 symbol) with:
+          gas gas_remaining wei
+         args _node
+  if not ext_call.success:
+      revert with ext_call.return_data[0 len return_data.size]
+  require return_data.size >= 32
+  if ext_call.return_data[12 len 20] != caller:
+      require stor9[_node][addr(ext_call.return_data)][caller]
+  require not _contentType - 1 or not _contentType
+  stor1[_node][_contentType] = (2 * _data.length) + 1
+  s = 0
+  idx = _data + 36
+  while _data + _data.length + 36 > idx:
+      stor1[_node][_contentType][s] = cd[idx]
+      s = s + 1
+      idx = idx + 32
+      continue 
+  idx = Mask(251, 0, _data.length + 31) >> 5
+  while stor1[_node][_contentType].length + 31 / 32 > idx:
+      stor1[_node][_contentType][idx] = 0
+      idx = idx + 1
+      continue 
+  log ABIChanged(
+        bytes32 node=_node,
+        uint256 contentType=_contentType)
+
+def setText(bytes32 _node, string _key, string _value) payable: 
+  require calldata.size - 4 >= 96
+  require _key <= 4294967296
+  require _key + 36 <= calldata.size
+  require _key.length <= 4294967296 and _key + _key.length + 36 <= calldata.size
+  require _value <= 4294967296
+  require _value + 36 <= calldata.size
+  require _value.length <= 4294967296 and _value + _value.length + 36 <= calldata.size
+  require ext_code.size(stor8)
+  static call stor8.owner(bytes32 symbol) with:
+          gas gas_remaining wei
+         args _node
+  if not ext_call.success:
+      revert with ext_call.return_data[0 len return_data.size]
+  require return_data.size >= 32
+  if ext_call.return_data[12 len 20] != caller:
+      require stor9[_node][addr(ext_call.return_data)][caller]
+  stor7[_node][_key[all]] = (2 * _value.length) + 1
+  s = 0
+  idx = _value + 36
+  while _value + _value.length + 36 > idx:
+      stor7[_node][_key[all]][s] = cd[idx]
+      s = s + 1
+      idx = idx + 32
+      continue 
+  idx = Mask(251, 0, _value.length + 31) >> 5
+  while stor7[_node][_key[all]].length + 31 / 32 > idx:
+      stor7[_node][_key[all]][idx] = 0
+      idx = idx + 1
+      continue 
+  mem[ceil32(_key.length) + 192] = _key.length
+  mem[ceil32(_key.length) + 224 len _key.length] = _key[all]
+  log TextChanged(bytes32 node, string indexedKey, string key):
+                  64,
+                  ceil32(_key.length) + 96,
+                  _key.length,
+                  _key[all],
+                  0,
+                  mem[_key.length + 224 len (2 * ceil32(_key.length)) - _key.length],
+                  _node,
+
+def ABI(bytes32 _node, uint256 _contentTypes) payable: 
+  mem[64] = 96
+  require calldata.size - 4 >= 64
+  mem[0] = _node
+  mem[32] = 1
+  idx = 1
+  while idx <= _contentTypes:
+      if not idx or not _contentTypes:
+          idx = 2 * idx
+          continue 
+      mem[0] = idx
+      mem[32] = sha3(_node, 1)
+      if stor1[_node][idx].length <= 0:
+          idx = 2 * idx
+          continue 
+      mem[32] = sha3(_node, 1)
+      mem[64] = ceil32(stor1[_node][idx].length) + 128
+      mem[96] = stor1[_node][idx].length
+      mem[0] = sha3(idx, sha3(_node, 1))
+      mem[128] = stor1[_node][idx]
+      s = 128
+      t = sha3(mem[0])
+      while stor1[_node][idx].length + 96 > s:
+          mem[s + 32] = stor1[t]
+          s = s + 32
+          t = t + 1
+          continue 
+      _80 = mem[64]
+      mem[mem[64]] = idx
+      mem[mem[64] + 32] = 64
+      mem[mem[64] + 64] = mem[96]
+      _82 = mem[96]
+      idx = 0
+      while idx < _82:
+          mem[mem[64] + idx + 96] = mem[idx + 128]
+          idx = idx + 32
+          continue 
+      if not _82 % 32:
+          return memory
+            from mem[64]
+             len _82 + _80 + -mem[64] + 96
+      mem[floor32(_82) + _80 + 96] = mem[floor32(_82) + _80 + -(_82 % 32) + 128 len _82 % 32]
+      return memory
+        from mem[64]
+         len floor32(_82) + _80 + -mem[64] + 128
+  return 0, 64, 0
+

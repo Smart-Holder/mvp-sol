@@ -1,0 +1,487 @@
+#
+#  Panoramix v4 Oct 2019 
+#  Decompiled source of 0x7Be8076f4EA4A4AD08075C2508e481d6C946D12b
+# 
+#  Let's make the world open source 
+# 
+#
+#  I failed with these: 
+#  - validateOrder_(addressentPattern, bytes _staticExtradata, uint8 _v, bytes32 _r, bytes32 _s)
+#  - hashOrder_(addressentPattern, bytes _staticExtradata)
+#  - ordersCanMatch_(addressentPatternBuy, bytes _replacementPatternSell, bytes _staticExtradataBuy, bytes _staticExtradataSell)
+#  - approveOrder_(addressentPattern, bytes _staticExtradata, bool _orderbookInclusionDesired)
+#  - hashToSign_(addressentPattern, bytes _staticExtradata)
+#  - cancelOrder_(addressentPattern, bytes _staticExtradata, uint8 _v, bytes32 _r, bytes32 _s)
+#  - atomicMatch_(addressentPatternBuy, bytes _replacementPatternSell, bytes _staticExtradataBuy, bytes _staticExtradataSell, uint8
+#  - calculateMatchPrice_(addressentPatternBuy, bytes _replacementPatternSell, bytes _staticExtradataBuy, bytes _staticExtradataSell)
+#  All the rest is below.
+#
+
+const name = 'Project Wyvern Exchange'
+const codename = 'Lambton Worm'
+const version = '2.2'
+const INVERSE_BASIS_POINT = 10000
+
+def storage:
+  owner is addr at storage 0 offset 8
+  exchangeTokenAddress is addr at storage 1
+  registryAddress is addr at storage 2
+  tokenTransferProxyAddress is addr at storage 3
+  stor4 is mapping of uint8 at storage 4
+  stor5 is mapping of uint8 at storage 5
+  minimumMakerProtocolFee is uint256 at storage 6
+  minimumTakerProtocolFee is uint256 at storage 7
+  protocolFeeRecipientAddress is addr at storage 8
+
+def tokenTransferProxy(): # not payable
+  return tokenTransferProxyAddress
+
+def minimumTakerProtocolFee(): # not payable
+  return minimumTakerProtocolFee
+
+def protocolFeeRecipient(): # not payable
+  return protocolFeeRecipientAddress
+
+def registry(): # not payable
+  return registryAddress
+
+def minimumMakerProtocolFee(): # not payable
+  return minimumMakerProtocolFee
+
+def cancelledOrFinalized(bytes32 _param1): # not payable
+  return bool(stor4[_param1])
+
+def owner(): # not payable
+  return owner
+
+def exchangeToken(): # not payable
+  return exchangeTokenAddress
+
+def approvedOrders(bytes32 _param1): # not payable
+  return bool(stor5[_param1])
+
+#
+#  Regular functions
+#
+
+def _fallback() payable: # default function
+  revert
+
+def renounceOwnership(): # not payable
+  require owner == caller
+  log OwnershipRenounced(address previousOwner=owner)
+  owner = 0
+
+def testCopyAddress(address _addr): # not payable
+  return Array(len=20, data=uint64(_addr) << 96)
+
+def changeProtocolFeeRecipient(address _newProtocolFeeRecipient): # not payable
+  require owner == caller
+  protocolFeeRecipientAddress = _newProtocolFeeRecipient
+
+def changeMinimumMakerProtocolFee(uint256 _newMinimumMakerProtocolFee): # not payable
+  require owner == caller
+  minimumMakerProtocolFee = _newMinimumMakerProtocolFee
+
+def changeMinimumTakerProtocolFee(uint256 _newMinimumTakerProtocolFee): # not payable
+  require owner == caller
+  minimumTakerProtocolFee = _newMinimumTakerProtocolFee
+
+def transferOwnership(address _newOwner): # not payable
+  require owner == caller
+  require _newOwner
+  log OwnershipTransferred(
+        address previousOwner=owner,
+        address newOwner=_newOwner)
+  owner = _newOwner
+
+def testCopy(bytes _arrToCopy): # not payable
+  mem[128 len _arrToCopy.length] = _arrToCopy[all]
+  mem[ceil32(_arrToCopy.length) + 128] = _arrToCopy.length
+  if _arrToCopy.length:
+      return Array(len=_arrToCopy.length, data=code.data_arrToCopy.length])
+  if _arrToCopy.length > 0:
+      mem[ceil32(_arrToCopy.length) + 160 len floor32(None - 95)] = mem[128 len floor32(None - 95)]
+  mem[(2 * ceil32(_arrToCopy.length)) + 160] = 32
+  mem[(2 * ceil32(_arrToCopy.length)) + 192] = _arrToCopy.length
+  mem[(2 * ceil32(_arrToCopy.length)) + 224 len ceil32(_arrToCopy.length)] = mem[ceil32(_arrToCopy.length) + 160 len ceil32(_arrToCopy.length)]
+  return Array(len=_arrToCopy.length, data=mem[ceil32(_arrToCopy.length) + 160 len _arrToCopy.length])
+
+def validateOrderParameters_(address_addrs, uint256_uints, uint8 _feeMethod, uint8 _side, uint8 _saleKind, uint8 _howToCall, bytes _calldata, bytes _replacementPattern, bytes _staticExtradata): # not payable
+  require uint8(cd) <= 1
+  require uint8(cd) <= 1
+  require uint8(cd) <= 1
+  require uint8(cd) <= 1
+  if addr(call.data) == this.address:
+      require uint8(cd) <= 1
+      if not uint8(cd):
+          require uint8(cd) <= 1
+          if uint8(cd) != 1:
+              return 1
+          if call.data >= minimumMakerProtocolFee:
+              if call.data >= minimumTakerProtocolFee:
+                  return 1
+      else:
+          if 0 < call.data[452]:
+              require uint8(cd) <= 1
+              if uint8(cd) != 1:
+                  return 1
+              if call.data >= minimumMakerProtocolFee:
+                  if call.data >= minimumTakerProtocolFee:
+                      return 1
+      return 0
+  else:
+      return 0
+
+def staticCall(address _target, bytes _calldata, bytes _extradata): # not payable
+  mem[128 len _calldata.length] = _calldata[all]
+  mem[ceil32(_calldata.length) + 128] = _extradata.length
+  mem[ceil32(_calldata.length) + 160 len _extradata.length] = _extradata[all]
+  mem[ceil32(_calldata.length) + ceil32(_extradata.length) + 160] = _calldata.length + _extradata.length
+  if _calldata.length + _extradata.length:
+      mem[ceil32(_calldata.length) + ceil32(_extradata.length) + 192 len 32 * _calldata.length + _extradata.length] = code.data * _calldata.length + _extradata.length]
+  if _extradata.length <= 0:
+      if _calldata.length > 0:
+          mem[ceil32(_calldata.length) + ceil32(_extradata.length) + 192 len floor32(None - 95)] = mem[128 len floor32(None - 95)]
+  else:
+      mem[ceil32(_calldata.length) + ceil32(_extradata.length) + 192 len floor32(None + -ceil32(_calldata.length) - 127)] = mem[ceil32(_calldata.length) + 160 len floor32(None + -ceil32(_calldata.length) - 127)]
+      if _calldata.length > 0:
+          mem[_extradata.length + ceil32(_calldata.length) + ceil32(_extradata.length) + 192 len floor32(None - 95)] = mem[128 len floor32(None - 95)]
+  static call _target.mem[ceil32(_calldata.length) + ceil32(_extradata.length) + 192 len 4] with:
+          gas gas_remaining wei
+         args mem[ceil32(_calldata.length) + ceil32(_extradata.length) + 196 len _calldata.length + _extradata.length - 4]
+  return bool(ext_call.success)
+
+def calculateFinalPrice(uint8 _side, uint8 _saleKind, uint256 _basePrice, uint256 _extra, uint256 _listingTime, uint256 _expirationTime): # not payable
+  require _saleKind <= 1
+  if not _saleKind:
+      return _basePrice
+  require _saleKind <= 1
+  if _saleKind != 1:
+      return 0
+  require _listingTime <= block.timestamp
+  if not _extra:
+      if _listingTime <= _expirationTime:
+          if _expirationTime - _listingTime:
+              if _side <= 1:
+                  if _side != 1:
+                      if (0 / _expirationTime - _listingTime) + _basePrice >= _basePrice:
+                          return ((0 / _expirationTime - _listingTime) + _basePrice)
+                  else:
+                      if 0 / _expirationTime - _listingTime <= _basePrice:
+                          return (_basePrice - (0 / _expirationTime - _listingTime))
+  else:
+      if (block.timestamp * _extra) - (_listingTime * _extra) / _extra == block.timestamp - _listingTime:
+          if _listingTime <= _expirationTime:
+              if _expirationTime - _listingTime:
+                  if _side <= 1:
+                      if _side != 1:
+                          if ((block.timestamp * _extra) - (_listingTime * _extra) / _expirationTime - _listingTime) + _basePrice >= _basePrice:
+                              return (((block.timestamp * _extra) - (_listingTime * _extra) / _expirationTime - _listingTime) + _basePrice)
+                      else:
+                          if (block.timestamp * _extra) - (_listingTime * _extra) / _expirationTime - _listingTime <= _basePrice:
+                              return (_basePrice - ((block.timestamp * _extra) - (_listingTime * _extra) / _expirationTime - _listingTime))
+  revert
+
+def calculateCurrentPrice_(address_addrs, uint256_uints, uint8 _feeMethod, uint8 _side, uint8 _saleKind, uint8 _howToCall, bytes _calldata, bytes _replacementPattern, bytes _staticExtradata): # not payable
+  require uint8(cd) <= 1
+  require uint8(cd) <= 1
+  require uint8(cd) <= 1
+  require uint8(cd) <= 1
+  require uint8(cd) <= 1
+  if not uint8(cd):
+      return call.data[356]
+  require uint8(cd) <= 1
+  if uint8(cd) != 1:
+      return 0
+  require call.data <= block.timestamp
+  if not call.data[388]:
+      if call.data <= call.data[452]:
+          if call.data[452] - call.data[420]:
+              if uint8(cd) <= 1:
+                  if uint8(cd) != 1:
+                      if (0 / call.data >= call.data[356]:
+                          return ((0 / call.data[452] - call.data[420]) + call.data[356])
+                  else:
+                      if 0 / call.data <= call.data[356]:
+                          return (call.data / call.data[452] - call.data[420]))
+  else:
+      if (block.timestamp * call.data * call.data / call.data == block.timestamp - call.data[420]:
+          if call.data <= call.data[452]:
+              if call.data[452] - call.data[420]:
+                  if uint8(cd) <= 1:
+                      if uint8(cd) != 1:
+                          if ((block.timestamp * call.data * call.data / call.data >= call.data[356]:
+                              return (((block.timestamp * call.data * call.data / call.data[452] - call.data[420]) + call.data[356])
+                      else:
+                          if (block.timestamp * call.data * call.data / call.data <= call.data[356]:
+                              return (call.dataestamp * call.data * call.data / call.data[452] - call.data[420]))
+  revert
+
+def guardedArrayReplace(bytes _array, bytes _desired, bytes _mask): # not payable
+  mem[96] = _array.length
+  mem[128 len _array.length] = _array[all]
+  mem[ceil32(_array.length) + 128] = _desired.length
+  mem[ceil32(_array.length) + 160 len _desired.length] = _desired[all]
+  mem[ceil32(_array.length) + ceil32(_desired.length) + 160] = _mask.length
+  mem[ceil32(_array.length) + ceil32(_desired.length) + 192 len _mask.length] = _mask[all]
+  require _array.length == _desired.length
+  require _array.length == _mask.length
+  require _array.length / 32 == _array.length / 32
+  idx = 0
+  while idx < _array.length / 32:
+      mem[(32 * idx + 1) + 96] = mem[(32 * idx + 1) + 96] and !mem[(32 * idx + 1) + ceil32(_array.length) + ceil32(_desired.length) + 160] or mem[(32 * idx + 1) + ceil32(_array.length) + ceil32(_desired.length) + 160] and mem[(32 * idx + 1) + ceil32(_array.length) + 128]
+      idx = idx + 1
+      continue 
+  if _array.length / 32 > 0:
+      mem[(32 * (_array.length / 32) + 1) + 96] = !mem[ceil32(_array.length) + ceil32(_desired.length) + (32 * (_array.length / 32) + 1) + 160] and mem[(32 * (_array.length / 32) + 1) + 96] or mem[ceil32(_array.length) + ceil32(_desired.length) + (32 * (_array.length / 32) + 1) + 160] and mem[ceil32(_array.length) + (32 * (_array.length / 32) + 1) + 128]
+      return Array(len=_array.length, data=mem[128 len _array.length])
+  idx = floor32(mem[96])
+  while idx < _array.length:
+      require idx < mem[ceil32(_array.length) + 128]
+      require idx < mem[ceil32(_array.length) + ceil32(_desired.length) + 160]
+      require idx < mem[96]
+      require idx < mem[ceil32(_array.length) + ceil32(_desired.length) + 160]
+      require idx < mem[96]
+      mem[idx + 128 len 8] = Mask(8, -(('or', ('mask_shl', 8, 248, -3, ('and', ('xor', 115339776388732929035197660848497720713218148788040405586178452820382218977280, ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 192, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_array'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_desired'))))), ('var', 0)), 32)))), ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 128, ('var', 0)), 32))))), ('mask_shl', 8, 248, -3, ('and', ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 192, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_array'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_desired'))))), ('var', 0)), 32))), ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 160, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_array'))))), ('var', 0)), 32)))))), 0) + 256, 0) << (('or', ('mask_shl', 8, 248, -3, ('and', ('xor', 115339776388732929035197660848497720713218148788040405586178452820382218977280, ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 192, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_array'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_desired'))))), ('var', 0)), 32)))), ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 128, ('var', 0)), 32))))), ('mask_shl', 8, 248, -3, ('and', ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 192, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_array'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_desired'))))), ('var', 0)), 32))), ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 160, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_array'))))), ('var', 0)), 32)))))), 0) - 256
+      idx = idx + 1
+      continue 
+  mem[ceil32(_array.length) + ceil32(_desired.length) + ceil32(_mask.length) + 192] = 32
+  mem[ceil32(_array.length) + ceil32(_desired.length) + ceil32(_mask.length) + 224] = mem[96]
+  mem[ceil32(_array.length) + ceil32(_desired.length) + ceil32(_mask.length) + 256 len ceil32(mem[96])] = mem[128 len ceil32(mem[96])]
+  if not mem[96] % 32:
+      return 32, mem[ceil32(_array.length) + ceil32(_desired.length) + ceil32(_mask.length) + 224 len mem[96] + 32]
+  mem[floor32(mem[96]) + ceil32(_array.length) + ceil32(_desired.length) + ceil32(_mask.length) + 256] = mem[floor32(mem[96]) + ceil32(_array.length) + ceil32(_desired.length) + ceil32(_mask.length) + -(mem[96] % 32) + 288 len mem[96] % 32]
+  return Array(len=mem[96], data=mem[ceil32(_array.length) + ceil32(_desired.length) + ceil32(_mask.length) + 256 len floor32(mem[96]) + 32]), 
+
+def orderCalldataCanMatch(bytes _buyCalldata, bytes _buyReplacementPattern, bytes _sellCalldata, bytes _sellReplacementPattern): # not payable
+  mem[96] = _buyCalldata.length
+  mem[128 len _buyCalldata.length] = _buyCalldata[all]
+  mem[ceil32(_buyCalldata.length) + 128] = _buyReplacementPattern.length
+  mem[ceil32(_buyCalldata.length) + 160 len _buyReplacementPattern.length] = _buyReplacementPattern[all]
+  mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160] = _sellCalldata.length
+  mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 192 len _sellCalldata.length] = _sellCalldata[all]
+  mem[64] = ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + ceil32(_sellCalldata.length) + ceil32(_sellReplacementPattern.length) + 224
+  mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + ceil32(_sellCalldata.length) + 192] = _sellReplacementPattern.length
+  mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + ceil32(_sellCalldata.length) + 224 len _sellReplacementPattern.length] = _sellReplacementPattern[all]
+  if _buyReplacementPattern.length <= 0:
+      if _sellReplacementPattern.length <= 0:
+          if _buyCalldata.length == _sellCalldata.length != 1:
+              return 0
+          s = ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 192
+          t = 128
+          u = 1
+          v = 1
+          while (t < _buyCalldata.length + 128) + u == 2:
+              if mem[t] == mem[s]:
+                  s = s + 32
+                  t = t + 32
+                  u = u
+                  v = v
+                  continue 
+              s = s + 32
+              t = t + 32
+              u = 0
+              v = 0
+              continue 
+      else:
+          require _sellCalldata.length == _buyCalldata.length
+          require _sellCalldata.length == _sellReplacementPattern.length
+          require _sellCalldata.length / 32 == _sellCalldata.length / 32
+          idx = 0
+          while idx < _sellCalldata.length / 32:
+              mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + (32 * idx + 1) + 160] = mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + (32 * idx + 1) + 160] and !mem[(32 * idx + 1) + ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + ceil32(_sellCalldata.length) + 192] or mem[(32 * idx + 1) + ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + ceil32(_sellCalldata.length) + 192] and mem[(32 * idx + 1) + 96]
+              idx = idx + 1
+              continue 
+          if _sellCalldata.length / 32 <= 0:
+              idx = floor32(mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160])
+              while idx < _sellCalldata.length:
+                  require idx < mem[96]
+                  require idx < mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + ceil32(_sellCalldata.length) + 192]
+                  require idx < mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160]
+                  require idx < mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + ceil32(_sellCalldata.length) + 192]
+                  require idx < mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160]
+                  mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + idx + 192 len 8] = Mask(8, -(('or', ('mask_shl', 8, 248, -3, ('and', ('xor', 115339776388732929035197660848497720713218148788040405586178452820382218977280, ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 224, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyReplacementPattern'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_sellCalldata'))))), ('var', 0)), 32)))), ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 192, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyReplacementPattern'))))), ('var', 0)), 32))))), ('mask_shl', 8, 248, -3, ('and', ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 224, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyReplacementPattern'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_sellCalldata'))))), ('var', 0)), 32))), ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 128, ('var', 0)), 32)))))), 0) + 256, 0) << (('or', ('mask_shl', 8, 248, -3, ('and', ('xor', 115339776388732929035197660848497720713218148788040405586178452820382218977280, ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 224, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyReplacementPattern'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_sellCalldata'))))), ('var', 0)), 32)))), ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 192, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyReplacementPattern'))))), ('var', 0)), 32))))), ('mask_shl', 8, 248, -3, ('and', ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 224, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyReplacementPattern'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_sellCalldata'))))), ('var', 0)), 32))), ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 128, ('var', 0)), 32)))))), 0) - 256
+                  idx = idx + 1
+                  continue 
+              if mem[96] == mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160] != 1:
+                  return 0
+              s = ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 192
+              t = 128
+              u = 1
+              v = 1
+              while (t < mem[96] + 128) + u == 2:
+                  if mem[t] == mem[s]:
+                      s = s + 32
+                      t = t + 32
+                      u = u
+                      v = v
+                      continue 
+                  s = s + 32
+                  t = t + 32
+                  u = 0
+                  v = 0
+                  continue 
+          else:
+              mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + (32 * (_sellCalldata.length / 32) + 1) + 160] = !mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + ceil32(_sellCalldata.length) + (32 * (_sellCalldata.length / 32) + 1) + 192] and mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + (32 * (_sellCalldata.length / 32) + 1) + 160] or mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + ceil32(_sellCalldata.length) + (32 * (_sellCalldata.length / 32) + 1) + 192] and mem[(32 * (_sellCalldata.length / 32) + 1) + 96]
+              if _buyCalldata.length == _sellCalldata.length != 1:
+                  return 0
+              s = ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 192
+              t = 128
+              u = 1
+              v = 1
+              while (t < _buyCalldata.length + 128) + u == 2:
+                  if mem[t] == mem[s]:
+                      s = s + 32
+                      t = t + 32
+                      u = u
+                      v = v
+                      continue 
+                  s = s + 32
+                  t = t + 32
+                  u = 0
+                  v = 0
+                  continue 
+  else:
+      require _buyCalldata.length == _sellCalldata.length
+      require _buyCalldata.length == _buyReplacementPattern.length
+      require _buyCalldata.length / 32 == _buyCalldata.length / 32
+      idx = 0
+      while idx < _buyCalldata.length / 32:
+          mem[(32 * idx + 1) + 96] = mem[(32 * idx + 1) + 96] and !mem[(32 * idx + 1) + ceil32(_buyCalldata.length) + 128] or mem[(32 * idx + 1) + ceil32(_buyCalldata.length) + 128] and mem[(32 * idx + 1) + ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160]
+          idx = idx + 1
+          continue 
+      if _buyCalldata.length / 32 > 0:
+          mem[(32 * (_buyCalldata.length / 32) + 1) + 96] = !mem[ceil32(_buyCalldata.length) + (32 * (_buyCalldata.length / 32) + 1) + 128] and mem[(32 * (_buyCalldata.length / 32) + 1) + 96] or mem[ceil32(_buyCalldata.length) + (32 * (_buyCalldata.length / 32) + 1) + 128] and mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + (32 * (_buyCalldata.length / 32) + 1) + 160]
+          if _sellReplacementPattern.length <= 0:
+              if _buyCalldata.length == _sellCalldata.length != 1:
+                  return 0
+              s = ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 192
+              t = 128
+              u = 1
+              v = 1
+              while (t < _buyCalldata.length + 128) + u == 2:
+                  if mem[t] == mem[s]:
+                      s = s + 32
+                      t = t + 32
+                      u = u
+                      v = v
+                      continue 
+                  s = s + 32
+                  t = t + 32
+                  u = 0
+                  v = 0
+                  continue 
+          else:
+              require _sellCalldata.length == _buyCalldata.length
+              require _sellCalldata.length == _sellReplacementPattern.length
+              require _sellCalldata.length / 32 == _sellCalldata.length / 32
+              idx = 0
+              while idx < _sellCalldata.length / 32:
+                  mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + (32 * idx + 1) + 160] = mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + (32 * idx + 1) + 160] and !mem[(32 * idx + 1) + ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + ceil32(_sellCalldata.length) + 192] or mem[(32 * idx + 1) + ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + ceil32(_sellCalldata.length) + 192] and mem[(32 * idx + 1) + 96]
+                  idx = idx + 1
+                  continue 
+              if _sellCalldata.length / 32 <= 0:
+                  idx = floor32(mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160])
+                  while idx < _sellCalldata.length:
+                      require idx < mem[96]
+                      require idx < mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + ceil32(_sellCalldata.length) + 192]
+                      require idx < mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160]
+                      require idx < mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + ceil32(_sellCalldata.length) + 192]
+                      require idx < mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160]
+                      mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + idx + 192 len 8] = Mask(8, -(('or', ('mask_shl', 8, 248, -3, ('and', ('xor', 115339776388732929035197660848497720713218148788040405586178452820382218977280, ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 224, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyReplacementPattern'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_sellCalldata'))))), ('var', 0)), 32)))), ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 192, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyReplacementPattern'))))), ('var', 0)), 32))))), ('mask_shl', 8, 248, -3, ('and', ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 224, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyReplacementPattern'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_sellCalldata'))))), ('var', 0)), 32))), ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 128, ('var', 0)), 32)))))), 0) + 256, 0) << (('or', ('mask_shl', 8, 248, -3, ('and', ('xor', 115339776388732929035197660848497720713218148788040405586178452820382218977280, ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 224, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyReplacementPattern'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_sellCalldata'))))), ('var', 0)), 32)))), ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 192, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyReplacementPattern'))))), ('var', 0)), 32))))), ('mask_shl', 8, 248, -3, ('and', ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 224, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyReplacementPattern'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_sellCalldata'))))), ('var', 0)), 32))), ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 128, ('var', 0)), 32)))))), 0) - 256
+                      idx = idx + 1
+                      continue 
+                  if mem[96] == mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160] != 1:
+                      return 0
+                  s = ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 192
+                  t = 128
+                  u = 1
+                  v = 1
+                  while (t < mem[96] + 128) + u == 2:
+                      if mem[t] == mem[s]:
+                          s = s + 32
+                          t = t + 32
+                          u = u
+                          v = v
+                          continue 
+                      s = s + 32
+                      t = t + 32
+                      u = 0
+                      v = 0
+                      continue 
+              else:
+                  mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + (32 * (_sellCalldata.length / 32) + 1) + 160] = !mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + ceil32(_sellCalldata.length) + (32 * (_sellCalldata.length / 32) + 1) + 192] and mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + (32 * (_sellCalldata.length / 32) + 1) + 160] or mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + ceil32(_sellCalldata.length) + (32 * (_sellCalldata.length / 32) + 1) + 192] and mem[(32 * (_sellCalldata.length / 32) + 1) + 96]
+                  if _buyCalldata.length == _sellCalldata.length != 1:
+                      return 0
+                  s = ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 192
+                  t = 128
+                  u = 1
+                  v = 1
+                  while (t < _buyCalldata.length + 128) + u == 2:
+                      if mem[t] == mem[s]:
+                          s = s + 32
+                          t = t + 32
+                          u = u
+                          v = v
+                          continue 
+                      s = s + 32
+                      t = t + 32
+                      u = 0
+                      v = 0
+                      continue 
+      else:
+          idx = floor32(mem[96])
+          while idx < _buyCalldata.length:
+              require idx < mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160]
+              require idx < mem[ceil32(_buyCalldata.length) + 128]
+              require idx < mem[96]
+              require idx < mem[ceil32(_buyCalldata.length) + 128]
+              require idx < mem[96]
+              mem[idx + 128 len 8] = Mask(8, -(('or', ('mask_shl', 8, 248, -3, ('and', ('xor', 115339776388732929035197660848497720713218148788040405586178452820382218977280, ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 160, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('var', 0)), 32)))), ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 128, ('var', 0)), 32))))), ('mask_shl', 8, 248, -3, ('and', ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 160, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('var', 0)), 32))), ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 192, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyReplacementPattern'))))), ('var', 0)), 32)))))), 0) + 256, 0) << (('or', ('mask_shl', 8, 248, -3, ('and', ('xor', 115339776388732929035197660848497720713218148788040405586178452820382218977280, ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 160, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('var', 0)), 32)))), ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 128, ('var', 0)), 32))))), ('mask_shl', 8, 248, -3, ('and', ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 160, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('var', 0)), 32))), ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 192, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyReplacementPattern'))))), ('var', 0)), 32)))))), 0) - 256
+              idx = idx + 1
+              continue 
+          if mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + ceil32(_sellCalldata.length) + 192] > 0:
+              require mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160] == mem[96]
+              require mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160] == mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + ceil32(_sellCalldata.length) + 192]
+              require mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160] / 32 == mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160] / 32
+              idx = 0
+              while idx < mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160] / 32:
+                  mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + (32 * idx + 1) + 160] = mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + (32 * idx + 1) + 160] and !mem[(32 * idx + 1) + ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + ceil32(_sellCalldata.length) + 192] or mem[(32 * idx + 1) + ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + ceil32(_sellCalldata.length) + 192] and mem[(32 * idx + 1) + 96]
+                  idx = idx + 1
+                  continue 
+              if mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160] / 32 > 0:
+                  mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + (32 * (mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160] / 32) + 1) + 160] = !mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + ceil32(_sellCalldata.length) + (32 * (mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160] / 32) + 1) + 192] and mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + (32 * (mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160] / 32) + 1) + 160] or mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + ceil32(_sellCalldata.length) + (32 * (mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160] / 32) + 1) + 192] and mem[(32 * (mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160] / 32) + 1) + 96]
+              else:
+                  _485 = mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160]
+                  idx = floor32(mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160])
+                  while idx < _485:
+                      require idx < mem[96]
+                      require idx < mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + ceil32(_sellCalldata.length) + 192]
+                      require idx < mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160]
+                      require idx < mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + ceil32(_sellCalldata.length) + 192]
+                      require idx < mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160]
+                      mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + idx + 192 len 8] = Mask(8, -(('or', ('mask_shl', 8, 248, -3, ('and', ('xor', 115339776388732929035197660848497720713218148788040405586178452820382218977280, ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 224, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyReplacementPattern'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_sellCalldata'))))), ('var', 0)), 32)))), ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 192, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyReplacementPattern'))))), ('var', 0)), 32))))), ('mask_shl', 8, 248, -3, ('and', ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 224, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyReplacementPattern'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_sellCalldata'))))), ('var', 0)), 32))), ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 128, ('var', 0)), 32)))))), 0) + 256, 0) << (('or', ('mask_shl', 8, 248, -3, ('and', ('xor', 115339776388732929035197660848497720713218148788040405586178452820382218977280, ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 224, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyReplacementPattern'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_sellCalldata'))))), ('var', 0)), 32)))), ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 192, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyReplacementPattern'))))), ('var', 0)), 32))))), ('mask_shl', 8, 248, -3, ('and', ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 224, ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyCalldata'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_buyReplacementPattern'))))), ('mask_shl', 251, 5, 0, ('add', 31, ('cd', ('add', 4, ('param', '_sellCalldata'))))), ('var', 0)), 32))), ('mask_shl', 8, 248, 0, ('mem', ('range', ('add', 128, ('var', 0)), 32)))))), 0) - 256
+                      _485 = mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160]
+                      idx = idx + 1
+                      continue 
+          if mem[96] == mem[ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 160] != 1:
+              return 0
+          s = ceil32(_buyCalldata.length) + ceil32(_buyReplacementPattern.length) + 192
+          t = 128
+          u = 1
+          v = 1
+          while (t < mem[96] + 128) + u == 2:
+              if mem[t] == mem[s]:
+                  s = s + 32
+                  t = t + 32
+                  u = u
+                  v = v
+                  continue 
+              s = s + 32
+              t = t + 32
+              u = 0
+              v = 0
+              continue 
+  return bool(v)
+
