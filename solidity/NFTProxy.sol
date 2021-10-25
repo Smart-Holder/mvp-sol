@@ -20,6 +20,7 @@ abstract contract NFTProxy is Proxyable {
 		uint256 amount;
 		bytes   data;
 		uint256 expiry; // second
+		address from;
 		Signature rsv;
 	}
 
@@ -53,16 +54,18 @@ abstract contract NFTProxy is Proxyable {
 
 	function withdrawFrom(TransferTx memory tx) public returns(bytes32, address) {
 		require(tx.expiry > block.timestamp, "#NFTProxy#withdrawFrom: TRANSFER_EXPIRY");
-		bytes32 hash = keccak256(abi.encodePacked(tx.token, tx.tokenId, tx.to, tx.amount, tx.data, tx.expiry));
+		bytes32 hash = keccak256(abi.encodePacked(tx.token, tx.tokenId, tx.to, tx.amount, tx.data, tx.expiry, tx.from));
 		address from = ecrecover(hash, tx.rsv.v, tx.rsv.r, tx.rsv.s);
+		require(from == tx.from, "#NFTProxy#withdrawFrom: BAD_SIGNATURE");
 		_withdraw(from, tx.to, tx.token, tx.tokenId, tx.amount, tx.data);
 		return (hash, from);
 	}
 
 	function transferFrom(TransferTx memory tx) public returns(bytes32, address) { // external {
 		require(tx.expiry > block.timestamp, "#NFTProxy#transferFrom: TRANSFER_EXPIRY");
-		bytes32 hash = keccak256(abi.encodePacked(tx.token, tx.tokenId, tx.to, tx.amount, tx.data, tx.expiry));
+		bytes32 hash = keccak256(abi.encodePacked(tx.token, tx.tokenId, tx.to, tx.amount, tx.data, tx.expiry, tx.from));
 		address from = ecrecover(hash, tx.rsv.v, tx.rsv.r, tx.rsv.s);
+		require(from == tx.from, "#NFTProxy#transferFrom: BAD_SIGNATURE");
 		_transfer(from, tx.to, tx.token, tx.tokenId, tx.amount);
 		return (hash, from);
 	}
