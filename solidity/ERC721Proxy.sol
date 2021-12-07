@@ -7,14 +7,14 @@ pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/IERC721.sol";
-import './NFTProxy.sol';
-import './Base.sol';
+import "./NFTProxy.sol";
+import "./Base.sol";
 
 contract ERC721Proxy is IERC721Receiver, NFTProxy {
 	using Address for address;
 
-	// token => map( tokenID => owner )
-	mapping(address => mapping(uint256 => address)) assets;
+	// token => map( tokenID => owners[] ) owners 第一个索引为主要owner后面的为从owner对外这个资产属于主owner
+	mapping(address => mapping(uint256 => address[])) assets;
 
 	bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
 	bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
@@ -42,16 +42,19 @@ contract ERC721Proxy is IERC721Receiver, NFTProxy {
 		IERC721 token = _isERC721(msg.sender);
 		require(token.ownerOf(tokenId) == address(this), "#ERC721Proxy#onERC721Received: NOT_OWN_TOKEN");
 
-		address to;
-		(to) = abi.decode(data, (address));
-		if (to == address(0)) {
-			to = from;
+		address[] memory to;
+		(to) = abi.decode(data, (address[]));
+
+		if (to.length == 0) {
+			to = new address[](1);
+			to[0] = from;
 		}
-		require(to != address(0), "#ERC721Proxy#onERC721Received: TO_IS_EMPTY");
+
+		checkEmptyAddress(to);
 
 		assets[address(token)][tokenId] = to; // assign
 
-		emit Transfer(address(0), to, address(token), tokenId, 0, 1);
+		emit Transfer(address(0), to[0], address(token), tokenId, 0, 1);
 
 		return _ERC721_RECEIVED;
 	}
@@ -59,7 +62,7 @@ contract ERC721Proxy is IERC721Receiver, NFTProxy {
 	function _withdraw(
 		address from, address to, address token, uint256 tokenId, uint256 amount, bytes memory _data
 	) internal override {
-		address owner = assets[token][tokenId];
+		address owner = assets[token][tokenId][0];
 		require(owner != address(0), "#ERC721Proxy#_withdraw: NOT_FOUND_ASSET");
 		require(owner == from, "#ERC721Proxy#_withdraw: NO_ACCESS");
 		require(amount == 1, "#ERC721Proxy#_withdraw: AMOUNT_ONLY_BE_1");
@@ -71,19 +74,19 @@ contract ERC721Proxy is IERC721Receiver, NFTProxy {
 		emit Transfer(from, address(0), token, tokenId, 0, 1);
 	}
 
-	function _transfer(address from, address to, address token, uint256 tokenId, uint256 amount) internal override {
-		address owner = assets[token][tokenId];
+	function _transfer(address from, address[] memory to, address token, uint256 tokenId, uint256 amount) internal override {
+		address owner = assets[token][tokenId][0];
 		require(owner != address(0), "#ERC721Proxy#_transfer: NOT_FOUND_ASSET");
 		require(owner == from, "#ERC721Proxy#_transfer: NO_ACCESS");
 		require(amount == 1, "#ERC721Proxy#_transfer: AMOUNT_ONLY_BE_1");
 
 		assets[token][tokenId] = to;
 
-		emit Transfer(from, to, token, tokenId, 0, 1);
+		emit Transfer(from, to[0], token, tokenId, 0, 1);
 	}
 
 	function balanceOf(address token, uint256 tokenId, address owner) public view override returns(uint256) {
-		return assets[token][tokenId] == owner ? 1: 0;
+		return assets[token][tokenId][0] == owner ? 1: 0;
 	}
 
 }
