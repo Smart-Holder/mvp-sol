@@ -92,6 +92,11 @@ abstract contract NFTProxy is Proxyable {
 		return byte_;
 	}
 
+    // function toBytes(uint256 x) internal pure returns (bytes memory b) {
+    //     b = new bytes(32);
+    //     assembly { mstore(add(b, 32), x) }
+    // }
+
 	function verify(TransferTx memory tx) view internal {
 		require(tx.expiry > block.timestamp, "#NFTProxy#verify: TRANSFER_EXPIRY");
 
@@ -101,9 +106,17 @@ abstract contract NFTProxy is Proxyable {
 		address[] memory signer = tx.signer;
 		Signature[] memory rsv_ = tx.rsv;
 
-		bytes32 hash = keccak256(encodePacked(tx));
+		bytes memory buf = encodePacked(tx);
+		//bytes memory head = bytes("\x19Ethereum Signed Message:\n");
+		bytes32 hash = keccak256(buf);
 
 		Owners memory owners = ownersOf(token, tokenId, from);
+		// Owners memory owners;
+		// owners.balances = 1;
+		// owners.owners = new address[](1);
+		// owners.owners[0] = 0xc2C09aABe77B718DA3f3050D0FDfe80D308Ea391;
+		// owners.signCount = 1;
+
 		require(from != address(0), "#NFTProxy#verify: ADDRESS_ZERO");
 		require(from == owners.owners[0], "#NFTProxy#verify: OWNER_NO_MATCH");
 		require(signer.length >= owners.signCount, "#NFTProxy#verify: SIGN_COUNT_TOO_LITTLE");
@@ -116,7 +129,9 @@ abstract contract NFTProxy is Proxyable {
 			address addr = signer[i];
 			if (indexOf(addrs, addr) == -1 && indexOf(owners.owners, addr) != -1) { // Exclude duplicates
 				Signature memory rsv = rsv_[i];
-				if (ecrecover(hash, rsv.v, rsv.r, rsv.s) == addr) {
+				address rec = ecrecover(hash, rsv.v, rsv.r, rsv.s);
+				// require(rec == addr, "#NFTProxy#verification: ERR_ecrecover");
+				if (rec == addr) {
 					addrs[signCount] = addr;
 					signCount++;
 					if (signCount == owners.signCount)
