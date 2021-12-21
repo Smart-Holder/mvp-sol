@@ -47,13 +47,15 @@ contract ERC1155_0 is IERC1155, IERC1155MetadataURI, Proxyable {
 	* @dev See {_setURI}.
 	*/
 	function __ERC1155_0_init() internal {
-		_setURI("");
+		_setURI("https://api.opensea.io/api/v1/metadata/0x495f947276749Ce646f68AC8c248420045cb7b5e/0x{id}");
 
 		// register the supported interfaces to conform to ERC1155 via ERC165
 		_registerInterface(_INTERFACE_ID_ERC1155);
 
 		// register the supported interfaces to conform to ERC1155MetadataURI via ERC165
 		_registerInterface(_INTERFACE_ID_ERC1155_METADATA_URI);
+
+		__Proxyable_init();
 	}
 
 	/**
@@ -377,12 +379,12 @@ contract ERC1155_0 is IERC1155, IERC1155MetadataURI, Proxyable {
 	}
 
 	function _doSafeBatchTransferAcceptanceCheck(
-	address operator,
-	address from,
-	address to,
-	uint256[] memory ids,
-	uint256[] memory amounts,
-	bytes memory data
+		address operator,
+		address from,
+		address to,
+		uint256[] memory ids,
+		uint256[] memory amounts,
+		bytes memory data
 	)
 		private
 	{
