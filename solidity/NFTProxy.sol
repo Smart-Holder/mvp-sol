@@ -92,12 +92,7 @@ abstract contract NFTProxy is Proxyable {
 		return byte_;
 	}
 
-    // function toBytes(uint256 x) internal pure returns (bytes memory b) {
-    //     b = new bytes(32);
-    //     assembly { mstore(add(b, 32), x) }
-    // }
-
-	function verify(TransferTx memory tx) view internal {
+	function verify(TransferTx memory tx) view public {
 		require(tx.expiry > block.timestamp, "#NFTProxy#verify: TRANSFER_EXPIRY");
 
 		address token = tx.token;
