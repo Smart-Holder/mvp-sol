@@ -1,7 +1,7 @@
 
 pragma solidity ^0.6.12;
 
-import './Base.sol';
+import './base.sol';
 import "@openzeppelin/contracts-ethereum-package/contracts/math/SafeMath.sol";
 
 /**
@@ -12,7 +12,7 @@ import "@openzeppelin/contracts-ethereum-package/contracts/math/SafeMath.sol";
  *
  * _Available since v3.1._
  */
-contract ERC1155_0 is IERC1155, IERC1155MetadataURI, Proxyable {
+contract ERC1155_ is IERC1155, IERC1155MetadataURI, Proxyable {
 	using SafeMath for uint256;
 	using Address for address;
 
@@ -46,7 +46,7 @@ contract ERC1155_0 is IERC1155, IERC1155MetadataURI, Proxyable {
 	/**
 	* @dev See {_setURI}.
 	*/
-	function __ERC1155_0_init() internal {
+	function __ERC1155_init() internal {
 		_setURI("https://api.opensea.io/api/v1/metadata/0x495f947276749Ce646f68AC8c248420045cb7b5e/0x{id}");
 
 		// register the supported interfaces to conform to ERC1155 via ERC165

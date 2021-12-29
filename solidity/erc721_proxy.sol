@@ -5,10 +5,9 @@
 pragma solidity ^0.6.12;
 pragma experimental ABIEncoderV2;
 
+import "./nft_proxy.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/IERC721.sol";
-import "./NFTProxy.sol";
-import "./Base.sol";
 
 contract ERC721Proxy is IERC721Receiver, NFTProxy {
 	using Address for address;

@@ -1,12 +1,12 @@
 
 pragma solidity ^0.6.12;
 
-import './ERC1155_0.sol';
+import './erc1155_.sol';
 
-contract ERC1155 is ERC1155_0 {
+contract ERC1155 is ERC1155_ {
 
 	function initialize() public {
-		__ERC1155_0_init();
+		__ERC1155_init();
 	}
 
 	function mint(address account, uint256 id, uint256 amount, bytes memory data) public {

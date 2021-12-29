@@ -2,12 +2,15 @@
 // Created by NTFSWAP Team
 
 pragma solidity ^0.6.12;
+
+import './base.sol';
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/ERC721.sol";
 
-contract ERC721 is ERC721UpgradeSafe {
+contract ERC721 is Proxyable, ERC721UpgradeSafe {
 
 	function initialize() external {
-		__ERC721_init("NFTs", "NFTs");
+		__Ownable_init();
+		__ERC721_init("MVP", "MVP");
 	}
 
 	function mint(uint256 tokenId) public {

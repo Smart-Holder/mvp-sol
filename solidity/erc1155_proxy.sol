@@ -2,8 +2,7 @@
 pragma solidity ^0.6.12;
 pragma experimental ABIEncoderV2;
 
-import './Base.sol';
-import './NFTProxy.sol';
+import './nft_proxy.sol';
 
 contract ERC1155Proxy is IERC1155Receiver, NFTProxy {
 	using Address for address;
