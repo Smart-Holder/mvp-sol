@@ -5,7 +5,7 @@ pragma experimental ABIEncoderV2;
 
 import './base.sol';
 
-abstract contract NFTProxy is Proxyable {
+abstract contract NFTProxy is MvpBase {
 
 	uint256 private constant _TRANSFER_EXPIRY = 60; // 60 second
 
@@ -38,26 +38,22 @@ abstract contract NFTProxy is Proxyable {
 		address token, uint256 indexed tokenId, uint256 fromBalance, uint256 toBalance
 	);
 
-	function __NFTProxy_init() internal {
-		__Proxyable_init();
-	}
-
 	function _withdraw(address from, address to, address token, uint256 tokenId, uint256 amount, bytes memory _data) virtual internal;
 	function _transfer(address from, Owners memory toOwners, address token, uint256 tokenId, uint256 amount) virtual internal;
 	function balanceOf(address token, uint256 tokenId, address owner) virtual public view returns(uint256);
 	function ownersOf (address token, uint256 tokenId, address owner) virtual public view returns(Owners memory);
 
 	function withdraw(address to, address token, uint256 tokenId, uint256 amount, bytes memory _data) public {
-		Owners memory owners = ownersOf(token, tokenId, msg.sender);
+		Owners memory owners = ownersOf(token, tokenId, _msgSender());
 		require(owners.signCount == 1, "#NFTProxy#transfer: NO_TRANSFER_SIGN_ERR"); // 如果signCount==1可以转移
-		_withdraw(msg.sender, to, token, tokenId, amount, _data);
+		_withdraw(_msgSender(), to, token, tokenId, amount, _data);
 	}
 
 	function transfer(address[] memory to, address token, uint256 tokenId, uint256 amount, uint256 signCount) public {
-		Owners memory owners = ownersOf(token, tokenId, msg.sender);
+		Owners memory owners = ownersOf(token, tokenId, _msgSender());
 		require(owners.signCount == 1, "#NFTProxy#transfer: NO_TRANSFER_SIGN_ERR"); // 如果signCount==1可以转移
 		Owners memory toOwners = checkOwners(token, tokenId, to, signCount);
-		_transfer(msg.sender, toOwners, token, tokenId, amount);
+		_transfer(_msgSender(), toOwners, token, tokenId, amount);
 	}
 
 	function checkEmptyAddress(address[] memory addrs) internal pure returns(address) {

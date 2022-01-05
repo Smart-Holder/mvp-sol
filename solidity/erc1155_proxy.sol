@@ -17,9 +17,9 @@ contract ERC1155Proxy is IERC1155Receiver, NFTProxy {
 	bytes4 private constant _ERC1155_RECEIVED = 0xf23a6e61;
 	bytes4 private constant _ERC1155_BATCH_RECEIVED = 0xbc197c81;
 	bytes4 private constant _INTERFACE_ID_ERC1155 = 0xd9b67a26;
+	// bytes4 private constant _INTERFACE_ID_ERC1155_METADATA_URI = 0x0e89341c;
 
-	function initialize() public {
-		__NFTProxy_init();
+	constructor() public {  // payable
 		_registerInterface(
 			ERC1155Proxy(address(0)).onERC1155Received.selector ^
 			ERC1155Proxy(address(0)).onERC1155BatchReceived.selector
@@ -70,7 +70,7 @@ contract ERC1155Proxy is IERC1155Receiver, NFTProxy {
 		uint256 signCount;
 		(to,signCount) = abi.decode(data, (address[], uint256));
 
-		_onERC1155Received(_isERC1155(msg.sender), from, to, id, value, signCount);
+		_onERC1155Received(_isERC1155(_msgSender()), from, to, id, value, signCount);
 
 		return _ERC1155_RECEIVED;
 	}
@@ -84,7 +84,7 @@ contract ERC1155Proxy is IERC1155Receiver, NFTProxy {
 		uint256 signCount;
 		(to,signCount) = abi.decode(data, (address[],uint256));
 
-		IERC1155 token = _isERC1155(msg.sender);
+		IERC1155 token = _isERC1155(_msgSender());
 
 		for (uint i = 0; i < ids.length; i++) {
 			_onERC1155Received(token, from, to, ids[i], values[i], signCount);

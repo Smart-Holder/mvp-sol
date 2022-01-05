@@ -18,8 +18,8 @@ contract ERC721Proxy is IERC721Receiver, NFTProxy {
 	bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
 	bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
 
-	function initialize() public {
-		__NFTProxy_init();
+	constructor() public {  // payable
+		_registerInterface(_ERC721_RECEIVED);
 	}
 
 	// @dev convert addr to standard ERC721 NFT,will be revered if add is invalid.
@@ -38,7 +38,7 @@ contract ERC721Proxy is IERC721Receiver, NFTProxy {
 	function onERC721Received(
 			address operator, address from, uint256 tokenId, bytes memory data
 	) external override returns (bytes4) {
-		IERC721 token = _isERC721(msg.sender);
+		IERC721 token = _isERC721(_msgSender());
 		require(token.ownerOf(tokenId) == address(this), "#ERC721Proxy#onERC721Received: NOT_OWN_TOKEN");
 
 		address[] memory to;
