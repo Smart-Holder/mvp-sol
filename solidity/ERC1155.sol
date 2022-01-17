@@ -432,7 +432,7 @@ contract MvpERC1155 is IERC1155, IERC1155MetadataURI, MvpBase {
 
 contract ERC1155 is MvpERC1155 {
 
-	constructor() MvpERC1155("Mvp", "Mvp", "https://mvp.stars-mine.com/asset/0x{address}/0x{id}") public {}
+	constructor() MvpERC1155("Mvp", "Mvp", "https://mvp.stars-mine.com/asset/{chain}/{token}/{id}") public {}
 
 	function mint(address account, uint256 id, uint256 amount, bytes memory data) public {
 		_mint(account, id, amount, data);
