@@ -541,6 +541,12 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		*/
 	function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal virtual { }
 
+	struct Tx {
+		address from;
+		address to;
+		uint256 tokenId;
+	}
+
 }
 
 contract ERC721 is MvpERC721 {
