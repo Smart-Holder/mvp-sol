@@ -1,0 +1,653 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"goerli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"deployedBytecode": {
+			"immutableReferences": {},
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"gasEstimates": null,
+		"methodIdentifiers": {
+			"balanceOf(address,uint256,address)": "467f4cb9",
+			"encodePacked((address,uint256,address,address[],uint256,bytes,uint256,uint256,address[],(bytes32,bytes32,uint8)[]))": "0525bdcf",
+			"owner()": "8da5cb5b",
+			"ownersOf(address,uint256,address)": "7c4d7f44",
+			"renounceOwnership()": "715018a6",
+			"supportsInterface(bytes4)": "01ffc9a7",
+			"transfer(address[],address,uint256,uint256,uint256)": "2a6c7d0c",
+			"transferFrom((address,uint256,address,address[],uint256,bytes,uint256,uint256,address[],(bytes32,bytes32,uint8)[]))": "2a3b3836",
+			"transferOwnership(address)": "f2fde38b",
+			"verify((address,uint256,address,address[],uint256,bytes,uint256,uint256,address[],(bytes32,bytes32,uint8)[]))": "a24d22fe",
+			"withdraw(address,address,uint256,uint256,bytes)": "074540da",
+			"withdrawFrom((address,uint256,address,address[],uint256,bytes,uint256,uint256,address[],(bytes32,bytes32,uint8)[]))": "3291bf99"
+		}
+	},
+	"abi": [
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": true,
+					"internalType": "address",
+					"name": "previousOwner",
+					"type": "address"
+				},
+				{
+					"indexed": true,
+					"internalType": "address",
+					"name": "newOwner",
+					"type": "address"
+				}
+			],
+			"name": "OwnershipTransferred",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": true,
+					"internalType": "address",
+					"name": "from",
+					"type": "address"
+				},
+				{
+					"indexed": true,
+					"internalType": "address",
+					"name": "to",
+					"type": "address"
+				},
+				{
+					"indexed": false,
+					"internalType": "address",
+					"name": "token",
+					"type": "address"
+				},
+				{
+					"indexed": true,
+					"internalType": "uint256",
+					"name": "tokenId",
+					"type": "uint256"
+				},
+				{
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "fromBalance",
+					"type": "uint256"
+				},
+				{
+					"indexed": false,
+					"internalType": "uint256",
+					"name": "toBalance",
+					"type": "uint256"
+				}
+			],
+			"name": "Transfer",
+			"type": "event"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "token",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "tokenId",
+					"type": "uint256"
+				},
+				{
+					"internalType": "address",
+					"name": "owner",
+					"type": "address"
+				}
+			],
+			"name": "balanceOf",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"components": [
+						{
+							"internalType": "address",
+							"name": "token",
+							"type": "address"
+						},
+						{
+							"internalType": "uint256",
+							"name": "tokenId",
+							"type": "uint256"
+						},
+						{
+							"internalType": "address",
+							"name": "from",
+							"type": "address"
+						},
+						{
+							"internalType": "address[]",
+							"name": "to",
+							"type": "address[]"
+						},
+						{
+							"internalType": "uint256",
+							"name": "amount",
+							"type": "uint256"
+						},
+						{
+							"internalType": "bytes",
+							"name": "data",
+							"type": "bytes"
+						},
+						{
+							"internalType": "uint256",
+							"name": "expiry",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint256",
+							"name": "signCount",
+							"type": "uint256"
+						},
+						{
+							"internalType": "address[]",
+							"name": "signer",
+							"type": "address[]"
+						},
+						{
+							"components": [
+								{
+									"internalType": "bytes32",
+									"name": "r",
+									"type": "bytes32"
+								},
+								{
+									"internalType": "bytes32",
+									"name": "s",
+									"type": "bytes32"
+								},
+								{
+									"internalType": "uint8",
+									"name": "v",
+									"type": "uint8"
+								}
+							],
+							"internalType": "struct NFTProxy.Signature[]",
+							"name": "rsv",
+							"type": "tuple[]"
+						}
+					],
+					"internalType": "struct NFTProxy.TransferTx",
+					"name": "tx",
+					"type": "tuple"
+				}
+			],
+			"name": "encodePacked",
+			"outputs": [
+				{
+					"internalType": "bytes",
+					"name": "",
+					"type": "bytes"
+				}
+			],
+			"stateMutability": "pure",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "owner",
+			"outputs": [
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "token",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "tokenId",
+					"type": "uint256"
+				},
+				{
+					"internalType": "address",
+					"name": "owner",
+					"type": "address"
+				}
+			],
+			"name": "ownersOf",
+			"outputs": [
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "balances",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint256",
+							"name": "signCount",
+							"type": "uint256"
+						},
+						{
+							"internalType": "address[]",
+							"name": "owners",
+							"type": "address[]"
+						}
+					],
+					"internalType": "struct NFTProxy.Owners",
+					"name": "",
+					"type": "tuple"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "renounceOwnership",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes4",
+					"name": "interfaceId",
+					"type": "bytes4"
+				}
+			],
+			"name": "supportsInterface",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address[]",
+					"name": "to",
+					"type": "address[]"
+				},
+				{
+					"internalType": "address",
+					"name": "token",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "tokenId",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "signCount",
+					"type": "uint256"
+				}
+			],
+			"name": "transfer",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"components": [
+						{
+							"internalType": "address",
+							"name": "token",
+							"type": "address"
+						},
+						{
+							"internalType": "uint256",
+							"name": "tokenId",
+							"type": "uint256"
+						},
+						{
+							"internalType": "address",
+							"name": "from",
+							"type": "address"
+						},
+						{
+							"internalType": "address[]",
+							"name": "to",
+							"type": "address[]"
+						},
+						{
+							"internalType": "uint256",
+							"name": "amount",
+							"type": "uint256"
+						},
+						{
+							"internalType": "bytes",
+							"name": "data",
+							"type": "bytes"
+						},
+						{
+							"internalType": "uint256",
+							"name": "expiry",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint256",
+							"name": "signCount",
+							"type": "uint256"
+						},
+						{
+							"internalType": "address[]",
+							"name": "signer",
+							"type": "address[]"
+						},
+						{
+							"components": [
+								{
+									"internalType": "bytes32",
+									"name": "r",
+									"type": "bytes32"
+								},
+								{
+									"internalType": "bytes32",
+									"name": "s",
+									"type": "bytes32"
+								},
+								{
+									"internalType": "uint8",
+									"name": "v",
+									"type": "uint8"
+								}
+							],
+							"internalType": "struct NFTProxy.Signature[]",
+							"name": "rsv",
+							"type": "tuple[]"
+						}
+					],
+					"internalType": "struct NFTProxy.TransferTx",
+					"name": "tx",
+					"type": "tuple"
+				}
+			],
+			"name": "transferFrom",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "newOwner",
+					"type": "address"
+				}
+			],
+			"name": "transferOwnership",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"components": [
+						{
+							"internalType": "address",
+							"name": "token",
+							"type": "address"
+						},
+						{
+							"internalType": "uint256",
+							"name": "tokenId",
+							"type": "uint256"
+						},
+						{
+							"internalType": "address",
+							"name": "from",
+							"type": "address"
+						},
+						{
+							"internalType": "address[]",
+							"name": "to",
+							"type": "address[]"
+						},
+						{
+							"internalType": "uint256",
+							"name": "amount",
+							"type": "uint256"
+						},
+						{
+							"internalType": "bytes",
+							"name": "data",
+							"type": "bytes"
+						},
+						{
+							"internalType": "uint256",
+							"name": "expiry",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint256",
+							"name": "signCount",
+							"type": "uint256"
+						},
+						{
+							"internalType": "address[]",
+							"name": "signer",
+							"type": "address[]"
+						},
+						{
+							"components": [
+								{
+									"internalType": "bytes32",
+									"name": "r",
+									"type": "bytes32"
+								},
+								{
+									"internalType": "bytes32",
+									"name": "s",
+									"type": "bytes32"
+								},
+								{
+									"internalType": "uint8",
+									"name": "v",
+									"type": "uint8"
+								}
+							],
+							"internalType": "struct NFTProxy.Signature[]",
+							"name": "rsv",
+							"type": "tuple[]"
+						}
+					],
+					"internalType": "struct NFTProxy.TransferTx",
+					"name": "tx",
+					"type": "tuple"
+				}
+			],
+			"name": "verify",
+			"outputs": [],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "to",
+					"type": "address"
+				},
+				{
+					"internalType": "address",
+					"name": "token",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "tokenId",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "amount",
+					"type": "uint256"
+				},
+				{
+					"internalType": "bytes",
+					"name": "_data",
+					"type": "bytes"
+				}
+			],
+			"name": "withdraw",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"components": [
+						{
+							"internalType": "address",
+							"name": "token",
+							"type": "address"
+						},
+						{
+							"internalType": "uint256",
+							"name": "tokenId",
+							"type": "uint256"
+						},
+						{
+							"internalType": "address",
+							"name": "from",
+							"type": "address"
+						},
+						{
+							"internalType": "address[]",
+							"name": "to",
+							"type": "address[]"
+						},
+						{
+							"internalType": "uint256",
+							"name": "amount",
+							"type": "uint256"
+						},
+						{
+							"internalType": "bytes",
+							"name": "data",
+							"type": "bytes"
+						},
+						{
+							"internalType": "uint256",
+							"name": "expiry",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint256",
+							"name": "signCount",
+							"type": "uint256"
+						},
+						{
+							"internalType": "address[]",
+							"name": "signer",
+							"type": "address[]"
+						},
+						{
+							"components": [
+								{
+									"internalType": "bytes32",
+									"name": "r",
+									"type": "bytes32"
+								},
+								{
+									"internalType": "bytes32",
+									"name": "s",
+									"type": "bytes32"
+								},
+								{
+									"internalType": "uint8",
+									"name": "v",
+									"type": "uint8"
+								}
+							],
+							"internalType": "struct NFTProxy.Signature[]",
+							"name": "rsv",
+							"type": "tuple[]"
+						}
+					],
+					"internalType": "struct NFTProxy.TransferTx",
+					"name": "tx",
+					"type": "tuple"
+				}
+			],
+			"name": "withdrawFrom",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		}
+	]
+}

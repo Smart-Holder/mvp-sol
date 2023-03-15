@@ -1,0 +1,752 @@
+{
+	"compiler": {
+		"version": "0.6.12+commit.27d51765"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "previousOwner",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "OwnershipTransferred",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "fromBalance",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "toBalance",
+						"type": "uint256"
+					}
+				],
+				"name": "Transfer",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					}
+				],
+				"name": "balanceOf",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "token",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "tokenId",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "from",
+								"type": "address"
+							},
+							{
+								"internalType": "address[]",
+								"name": "to",
+								"type": "address[]"
+							},
+							{
+								"internalType": "uint256",
+								"name": "amount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bytes",
+								"name": "data",
+								"type": "bytes"
+							},
+							{
+								"internalType": "uint256",
+								"name": "expiry",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "signCount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address[]",
+								"name": "signer",
+								"type": "address[]"
+							},
+							{
+								"components": [
+									{
+										"internalType": "bytes32",
+										"name": "r",
+										"type": "bytes32"
+									},
+									{
+										"internalType": "bytes32",
+										"name": "s",
+										"type": "bytes32"
+									},
+									{
+										"internalType": "uint8",
+										"name": "v",
+										"type": "uint8"
+									}
+								],
+								"internalType": "struct NFTProxy.Signature[]",
+								"name": "rsv",
+								"type": "tuple[]"
+							}
+						],
+						"internalType": "struct NFTProxy.TransferTx",
+						"name": "tx",
+						"type": "tuple"
+					}
+				],
+				"name": "encodePacked",
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "operator",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "onERC721Received",
+				"outputs": [
+					{
+						"internalType": "bytes4",
+						"name": "",
+						"type": "bytes4"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					}
+				],
+				"name": "ownersOf",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "balances",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "signCount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address[]",
+								"name": "owners",
+								"type": "address[]"
+							}
+						],
+						"internalType": "struct NFTProxy.Owners",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "renounceOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes4",
+						"name": "interfaceId",
+						"type": "bytes4"
+					}
+				],
+				"name": "supportsInterface",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address[]",
+						"name": "to",
+						"type": "address[]"
+					},
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "signCount",
+						"type": "uint256"
+					}
+				],
+				"name": "transfer",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "token",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "tokenId",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "from",
+								"type": "address"
+							},
+							{
+								"internalType": "address[]",
+								"name": "to",
+								"type": "address[]"
+							},
+							{
+								"internalType": "uint256",
+								"name": "amount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bytes",
+								"name": "data",
+								"type": "bytes"
+							},
+							{
+								"internalType": "uint256",
+								"name": "expiry",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "signCount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address[]",
+								"name": "signer",
+								"type": "address[]"
+							},
+							{
+								"components": [
+									{
+										"internalType": "bytes32",
+										"name": "r",
+										"type": "bytes32"
+									},
+									{
+										"internalType": "bytes32",
+										"name": "s",
+										"type": "bytes32"
+									},
+									{
+										"internalType": "uint8",
+										"name": "v",
+										"type": "uint8"
+									}
+								],
+								"internalType": "struct NFTProxy.Signature[]",
+								"name": "rsv",
+								"type": "tuple[]"
+							}
+						],
+						"internalType": "struct NFTProxy.TransferTx",
+						"name": "tx",
+						"type": "tuple"
+					}
+				],
+				"name": "transferFrom",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "transferOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "token",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "tokenId",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "from",
+								"type": "address"
+							},
+							{
+								"internalType": "address[]",
+								"name": "to",
+								"type": "address[]"
+							},
+							{
+								"internalType": "uint256",
+								"name": "amount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bytes",
+								"name": "data",
+								"type": "bytes"
+							},
+							{
+								"internalType": "uint256",
+								"name": "expiry",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "signCount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address[]",
+								"name": "signer",
+								"type": "address[]"
+							},
+							{
+								"components": [
+									{
+										"internalType": "bytes32",
+										"name": "r",
+										"type": "bytes32"
+									},
+									{
+										"internalType": "bytes32",
+										"name": "s",
+										"type": "bytes32"
+									},
+									{
+										"internalType": "uint8",
+										"name": "v",
+										"type": "uint8"
+									}
+								],
+								"internalType": "struct NFTProxy.Signature[]",
+								"name": "rsv",
+								"type": "tuple[]"
+							}
+						],
+						"internalType": "struct NFTProxy.TransferTx",
+						"name": "tx",
+						"type": "tuple"
+					}
+				],
+				"name": "verify",
+				"outputs": [],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes",
+						"name": "_data",
+						"type": "bytes"
+					}
+				],
+				"name": "withdraw",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "token",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "tokenId",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "from",
+								"type": "address"
+							},
+							{
+								"internalType": "address[]",
+								"name": "to",
+								"type": "address[]"
+							},
+							{
+								"internalType": "uint256",
+								"name": "amount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bytes",
+								"name": "data",
+								"type": "bytes"
+							},
+							{
+								"internalType": "uint256",
+								"name": "expiry",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "signCount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address[]",
+								"name": "signer",
+								"type": "address[]"
+							},
+							{
+								"components": [
+									{
+										"internalType": "bytes32",
+										"name": "r",
+										"type": "bytes32"
+									},
+									{
+										"internalType": "bytes32",
+										"name": "s",
+										"type": "bytes32"
+									},
+									{
+										"internalType": "uint8",
+										"name": "v",
+										"type": "uint8"
+									}
+								],
+								"internalType": "struct NFTProxy.Signature[]",
+								"name": "rsv",
+								"type": "tuple[]"
+							}
+						],
+						"internalType": "struct NFTProxy.TransferTx",
+						"name": "tx",
+						"type": "tuple"
+					}
+				],
+				"name": "withdrawFrom",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"onERC721Received(address,address,uint256,bytes)": {
+					"details": "The ERC721 smart contract calls this function on the recipient after a {IERC721-safeTransferFrom}. This function MUST return the function selector, otherwise the caller will revert the transaction. The selector to be returned can be obtained as `this.onERC721Received.selector`. This function MAY throw to revert and reject the transfer. Note: the ERC721 contract address is always the message sender.",
+					"params": {
+						"data": "Additional data with no specified format",
+						"from": "The address which previously owned the token",
+						"operator": "The address which called `safeTransferFrom` function",
+						"tokenId": "The NFT identifier which is being transferred"
+					},
+					"returns": {
+						"_0": "bytes4 `bytes4(keccak256(\"onERC721Received(address,address,uint256,bytes)\"))`"
+					}
+				},
+				"owner()": {
+					"details": "Returns the address of the current owner."
+				},
+				"renounceOwnership()": {
+					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+				},
+				"supportsInterface(bytes4)": {
+					"details": "See {IERC165-supportsInterface}. Time complexity O(1), guaranteed to always use less than 30 000 gas."
+				},
+				"transferOwnership(address)": {
+					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"onERC721Received(address,address,uint256,bytes)": {
+					"notice": "Handle the receipt of an NFT"
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"upgradeSolidityRemix/mvp-sol/solidity/erc721_proxy.sol": "ERC721Proxy"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"@openzeppelin/contracts-ethereum-package/contracts/introspection/IERC165.sol": {
+			"keccak256": "0x9175561c374ec1fc33045e5dfdde2057e63e00debf432875f9e1e3395d99c149",
+			"urls": [
+				"bzz-raw://b0167043c1938b56904deaa481a73041aa4a9e054c60db0b0dfbebfe7869c06a",
+				"dweb:/ipfs/QmUoYjhymBr6WUpExKgRvKxXD5fcdpQEe1o9ResKZu6CC5"
+			]
+		},
+		"@openzeppelin/contracts-ethereum-package/contracts/math/SafeMath.sol": {
+			"keccak256": "0x04d34b3cd5677bea25f8dfceb6dec0eaa071d4d4b789a43f13fe0c415ba4c296",
+			"urls": [
+				"bzz-raw://e7e8b526a6839e5ba14f0d23a830387fec47f7043ce01d42c9f285b709a9d080",
+				"dweb:/ipfs/QmXmhhFmX5gcAvVzNiDPAGA35iHMPNaYtQkACswRHBVTNw"
+			]
+		},
+		"@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/IERC721.sol": {
+			"keccak256": "0x734b5bedb78074a59bca6aff9e5a1801c9c7e9c5314daf32e14857161fb36932",
+			"urls": [
+				"bzz-raw://4574e71185f6693eb5cdf7a5126fba97caf0ec0366b08290dd361af44b3414d3",
+				"dweb:/ipfs/QmTPBh1R3EU973H7h6D1kQ1XBA1oX2QdSHZACyytWUYKsn"
+			]
+		},
+		"@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/IERC721Receiver.sol": {
+			"keccak256": "0xa0237f846362c88efa0b2a5815e5cf95cf58c1f9acf654fa6e57f62090fdc92d",
+			"urls": [
+				"bzz-raw://ed15922f47d283422ed74b3ed7ff4c8df4831d7611953b5c970f460bf2215e3c",
+				"dweb:/ipfs/QmaNLi68QwwZhENcbM6D5GP6Yp3xC8fQY7gEMXvWES92uK"
+			]
+		},
+		"@openzeppelin/contracts-ethereum-package/contracts/utils/Address.sol": {
+			"keccak256": "0x5f7da58ee3d9faa9b8999a93d49c8ff978f1afc88ae9bcfc6f9cbb44da011c2b",
+			"urls": [
+				"bzz-raw://4f089d954b3ecaa26949412fe63e9a184b056562c6c13dd4a0529a5d9a2e685a",
+				"dweb:/ipfs/QmVK5iCNAMcEJQxT59bsC5E53JQASDQPU6khHox3d5ZXCn"
+			]
+		},
+		"upgradeSolidityRemix/mvp-sol/solidity/base.sol": {
+			"keccak256": "0x84034c5324f05cc0b584a883ed1baed36371923be99f4e93af9b1f8fb68a6f0a",
+			"urls": [
+				"bzz-raw://967a9158ac173377e272b37068689dcdff8e1e123bc1ce15c99f0717991595e5",
+				"dweb:/ipfs/Qmbdk92AfiXRiJQMAaSDFXpux6FhHcchDTxCBzDNV25Y7y"
+			]
+		},
+		"upgradeSolidityRemix/mvp-sol/solidity/erc721_proxy.sol": {
+			"keccak256": "0x84334aaa3ebcebcd9fe3aa926d13adff34e7484c2865c7e1005b4ca2a3ea1ad1",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6cf584e1073f4f9462726d6e57ad431f0479692703d13de7c1f5ceae117c1b74",
+				"dweb:/ipfs/QmbTjpz721gExkr2M5HzduDd43rWMDJv5GvFMfwDjwc6Hc"
+			]
+		},
+		"upgradeSolidityRemix/mvp-sol/solidity/nft_proxy.sol": {
+			"keccak256": "0x43ff1aa1966798bb1b515f061c4c7759460d08d6bb9b4f5e22c53c22b0a29d4a",
+			"urls": [
+				"bzz-raw://9af8f3b99414bdf1d0e7a28ec6248827efe9c76e33dcea6ad8dd2fd38aa3621a",
+				"dweb:/ipfs/QmRGyckk7GPttT6yHe4SXU8ieSEHjM9FHHLdkBn3htugKJ"
+			]
+		}
+	},
+	"version": 1
+}

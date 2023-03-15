@@ -551,10 +551,12 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 
 contract ERC721 is MvpERC721 {
 
-	constructor() MvpERC721("Mvp", "Mvp") public {}
+	constructor() MvpERC721("Mvp", "Mvp") public {
+		_setBaseURI("https://nftimg.stars-mine.com/json-metis-dev/");
+	}
 
-	function mint(uint256 tokenId) public {
-		_mint(_msgSender(), tokenId);
+	function mintUniqueTokenTo(address to, uint256 tokenId) public {
+		_mint(to, tokenId);
 	}
 
 	function safeMintURI(address to, uint256 tokenId, string memory _tokenURI, bytes memory _data) public {
@@ -580,12 +582,11 @@ contract ERC721 is MvpERC721 {
 		_setBaseURI(baseURI_);
 	}
 
-	function exists(uint256 tokenId) public returns (bool) {
+	function exists(uint256 tokenId) public view returns (bool) {
 		return _exists(tokenId);
 	}
 
-	function isApprovedOrOwner(address spender, uint256 tokenId) public returns (bool) {
+	function isApprovedOrOwner(address spender, uint256 tokenId) public view returns (bool) {
 		return _isApprovedOrOwner(spender, tokenId);
 	}
-
 }
