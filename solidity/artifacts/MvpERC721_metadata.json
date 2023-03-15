@@ -705,11 +705,11 @@
 			]
 		},
 		"upgradeSolidityRemix/mvp-sol/solidity/ERC721.sol": {
-			"keccak256": "0x1b669e01185496dc5b4d7c9050c614aff70b1e819f24bde0d1464f2927951dac",
+			"keccak256": "0x72b87c60daf1c7fcc09fe2afe39c1fc240ad90bc61eb9b02444a612ef77784a7",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://29365e2a77bde6fe0cd667107f7323d2dcc7dc0fc7bbcc9b7adc7b5b4813e93f",
-				"dweb:/ipfs/QmezDV3QdPJcrDPwmtv2kBFGn9oVpU4Prf3cmiQ62ZDSp3"
+				"bzz-raw://52d125b81f03c3b71d3178c599e668120a08d76b2b793e0869e92f6ba55b2d17",
+				"dweb:/ipfs/QmUc9aj1epkWw9nioc8g7da43gFZ9ZHeAjzQXzmr4SUSD6"
 			]
 		},
 		"upgradeSolidityRemix/mvp-sol/solidity/base.sol": {

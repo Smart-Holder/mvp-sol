@@ -552,7 +552,7 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 contract ERC721 is MvpERC721 {
 
 	constructor() MvpERC721("Mvp", "Mvp") public {
-		_setBaseURI("https://nftimg.stars-mine.com/json-metis-dev/");
+		_setBaseURI("https://files.smartholder.jp/json-test/");
 	}
 
 	function mintUniqueTokenTo(address to, uint256 tokenId) public {
