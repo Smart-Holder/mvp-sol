@@ -89,7 +89,6 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 	constructor(string memory name, string memory symbol) public {
 		_name = name;
 		_symbol = symbol;
-
 		// register the supported interfaces to conform to ERC721 via ERC165
 		_registerInterface(_INTERFACE_ID_ERC721);
 		_registerInterface(_INTERFACE_ID_ERC721_METADATA);
@@ -102,9 +101,8 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* @return uint256 representing the amount owned by the passed address
 		*/
 	function balanceOf(address owner) public view override returns (uint256) {
-			require(owner != address(0), "ERC721: balance query for the zero address");
-
-			return _holderTokens[owner].length();
+		require(owner != address(0), "ERC721: balance query for the zero address");
+		return _holderTokens[owner].length();
 	}
 
 	/**
@@ -113,7 +111,7 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* @return address currently marked as the owner of the given token ID
 		*/
 	function ownerOf(uint256 tokenId) public view override returns (address) {
-			return _tokenOwners.get(tokenId, "ERC721: owner query for nonexistent token");
+		return _tokenOwners.get(tokenId, "ERC721: owner query for nonexistent token");
 	}
 
 	/**
@@ -121,7 +119,7 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* @return string representing the token name
 		*/
 	function name() public view override returns (string memory) {
-			return _name;
+		return _name;
 	}
 
 	/**
@@ -129,7 +127,7 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* @return string representing the token symbol
 		*/
 	function symbol() public view override returns (string memory) {
-			return _symbol;
+		return _symbol;
 	}
 
 	/**
@@ -164,20 +162,20 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* - `tokenId` must exist.
 		*/
 	function tokenURI(uint256 tokenId) public view override returns (string memory) {
-			require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+		require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
 
-			string memory _tokenURI = _tokenURIs[tokenId];
+		string memory _tokenURI = _tokenURIs[tokenId];
 
-			// If there is no base URI, return the token URI.
-			if (bytes(_baseURI).length == 0) {
-					return _tokenURI;
-			}
-			// If both are set, concatenate the baseURI and tokenURI (via abi.encodePacked).
-			if (bytes(_tokenURI).length > 0) {
-					return string(abi.encodePacked(_baseURI, _tokenURI));
-			}
-			// If there is a baseURI but no tokenURI, concatenate the tokenID to the baseURI.
-			return string(abi.encodePacked(_baseURI, tokenId.toString()));
+		// If there is no base URI, return the token URI.
+		if (bytes(_baseURI).length == 0) {
+				return _tokenURI;
+		}
+		// If both are set, concatenate the baseURI and tokenURI (via abi.encodePacked).
+		if (bytes(_tokenURI).length > 0) {
+				return string(abi.encodePacked(_baseURI, _tokenURI));
+		}
+		// If there is a baseURI but no tokenURI, concatenate the tokenID to the baseURI.
+		return string(abi.encodePacked(_baseURI, tokenId.toString()));
 	}
 
 	/**
@@ -186,7 +184,7 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 	* to the token ID if no specific URI is set for that token ID.
 	*/
 	function baseURI() public view returns (string memory) {
-			return _baseURI;
+		return _baseURI;
 	}
 
 	/**
@@ -196,7 +194,7 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* @return uint256 token ID at the given index of the tokens list owned by the requested address
 		*/
 	function tokenOfOwnerByIndex(address owner, uint256 index) public view override returns (uint256) {
-			return _holderTokens[owner].at(index);
+		return _holderTokens[owner].at(index);
 	}
 
 	/**
@@ -204,8 +202,8 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* @return uint256 representing the total amount of tokens
 		*/
 	function totalSupply() public view override returns (uint256) {
-			// _tokenOwners are indexed by tokenIds, so .length() returns the number of tokenIds
-			return _tokenOwners.length();
+		// _tokenOwners are indexed by tokenIds, so .length() returns the number of tokenIds
+		return _tokenOwners.length();
 	}
 
 	/**
@@ -215,8 +213,8 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* @return uint256 token ID at the given index of the tokens list
 		*/
 	function tokenByIndex(uint256 index) public view override returns (uint256) {
-			(uint256 tokenId, ) = _tokenOwners.at(index);
-			return tokenId;
+		(uint256 tokenId, ) = _tokenOwners.at(index);
+		return tokenId;
 	}
 
 	/**
@@ -228,14 +226,13 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* @param tokenId uint256 ID of the token to be approved
 		*/
 	function approve(address to, uint256 tokenId) public virtual override {
-			address owner = ownerOf(tokenId);
-			require(to != owner, "ERC721: approval to current owner");
+		address owner = ownerOf(tokenId);
+		require(to != owner, "ERC721: approval to current owner");
 
-			require(_msgSender() == owner || isApprovedForAll(owner, _msgSender()),
-					"ERC721: approve caller is not owner nor approved for all"
-			);
-
-			_approve(to, tokenId);
+		require(_msgSender() == owner || isApprovedForAll(owner, _msgSender()),
+				"ERC721: approve caller is not owner nor approved for all"
+		);
+		_approve(to, tokenId);
 	}
 
 	/**
@@ -245,9 +242,8 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* @return address currently approved for the given token ID
 		*/
 	function getApproved(uint256 tokenId) public view override returns (address) {
-			require(_exists(tokenId), "ERC721: approved query for nonexistent token");
-
-			return _tokenApprovals[tokenId];
+		require(_exists(tokenId), "ERC721: approved query for nonexistent token");
+		return _tokenApprovals[tokenId];
 	}
 
 	/**
@@ -257,10 +253,9 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* @param approved representing the status of the approval to be set
 		*/
 	function setApprovalForAll(address operator, bool approved) public virtual override {
-			require(operator != _msgSender(), "ERC721: approve to caller");
-
-			_operatorApprovals[_msgSender()][operator] = approved;
-			emit ApprovalForAll(_msgSender(), operator, approved);
+		require(operator != _msgSender(), "ERC721: approve to caller");
+		_operatorApprovals[_msgSender()][operator] = approved;
+		emit ApprovalForAll(_msgSender(), operator, approved);
 	}
 
 	/**
@@ -270,7 +265,7 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* @return bool whether the given operator is approved by the given owner
 		*/
 	function isApprovedForAll(address owner, address operator) public view override returns (bool) {
-			return _operatorApprovals[owner][operator];
+		return _operatorApprovals[owner][operator];
 	}
 
 	/**
@@ -282,10 +277,10 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* @param tokenId uint256 ID of the token to be transferred
 		*/
 	function transferFrom(address from, address to, uint256 tokenId) public virtual override {
-			//solhint-disable-next-line max-line-length
-			require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
+		//solhint-disable-next-line max-line-length
+		require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
 
-			_transfer(from, to, tokenId);
+		_transfer(from, to, tokenId);
 	}
 
 	/**
@@ -300,7 +295,7 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* @param tokenId uint256 ID of the token to be transferred
 		*/
 	function safeTransferFrom(address from, address to, uint256 tokenId) public virtual override {
-			safeTransferFrom(from, to, tokenId, "");
+		safeTransferFrom(from, to, tokenId, "");
 	}
 
 	/**
@@ -316,8 +311,8 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* @param _data bytes data to send along with a safe transfer check
 		*/
 	function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory _data) public virtual override {
-			require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
-			_safeTransfer(from, to, tokenId, _data);
+		require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
+		_safeTransfer(from, to, tokenId, _data);
 	}
 
 	/**
@@ -333,8 +328,8 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* @param _data bytes data to send along with a safe transfer check
 		*/
 	function _safeTransfer(address from, address to, uint256 tokenId, bytes memory _data) internal virtual {
-			_transfer(from, to, tokenId);
-			require(_checkOnERC721Received(from, to, tokenId, _data), "ERC721: transfer to non ERC721Receiver implementer");
+		_transfer(from, to, tokenId);
+		require(_checkOnERC721Received(from, to, tokenId, _data), "ERC721: transfer to non ERC721Receiver implementer");
 	}
 
 	/**
@@ -343,7 +338,7 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* @return bool whether the token exists
 		*/
 	function _exists(uint256 tokenId) internal view returns (bool) {
-			return _tokenOwners.contains(tokenId);
+		return _tokenOwners.contains(tokenId);
 	}
 
 	/**
@@ -354,9 +349,9 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* is an operator of the owner, or is the owner of the token
 		*/
 	function _isApprovedOrOwner(address spender, uint256 tokenId) internal view returns (bool) {
-			require(_exists(tokenId), "ERC721: operator query for nonexistent token");
-			address owner = ownerOf(tokenId);
-			return (spender == owner || getApproved(tokenId) == spender || isApprovedForAll(owner, spender));
+		require(_exists(tokenId), "ERC721: operator query for nonexistent token");
+		address owner = ownerOf(tokenId);
+		return (spender == owner || getApproved(tokenId) == spender || isApprovedForAll(owner, spender));
 	}
 
 	/**
@@ -370,7 +365,7 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* @param tokenId uint256 ID of the token to be minted
 		*/
 	function _safeMint(address to, uint256 tokenId) internal virtual {
-			_safeMint(to, tokenId, "");
+		_safeMint(to, tokenId, "");
 	}
 
 	/**
@@ -385,8 +380,8 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* @param _data bytes data to send along with a safe transfer check
 		*/
 	function _safeMint(address to, uint256 tokenId, bytes memory _data) internal virtual {
-			_mint(to, tokenId);
-			require(_checkOnERC721Received(address(0), to, tokenId, _data), "ERC721: transfer to non ERC721Receiver implementer");
+		_mint(to, tokenId);
+		require(_checkOnERC721Received(address(0), to, tokenId, _data), "ERC721: transfer to non ERC721Receiver implementer");
 	}
 
 	/**
@@ -396,16 +391,16 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* @param tokenId uint256 ID of the token to be minted
 		*/
 	function _mint(address to, uint256 tokenId) internal virtual {
-			require(to != address(0), "ERC721: mint to the zero address");
-			require(!_exists(tokenId), "ERC721: token already minted");
+		require(to != address(0), "ERC721: mint to the zero address");
+		require(!_exists(tokenId), "ERC721: token already minted");
 
-			_beforeTokenTransfer(address(0), to, tokenId);
+		_beforeTokenTransfer(address(0), to, tokenId);
 
-			_holderTokens[to].add(tokenId);
+		_holderTokens[to].add(tokenId);
 
-			_tokenOwners.set(tokenId, to);
+		_tokenOwners.set(tokenId, to);
 
-			emit Transfer(address(0), to, tokenId);
+		emit Transfer(address(0), to, tokenId);
 	}
 
 	/**
@@ -414,23 +409,23 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* @param tokenId uint256 ID of the token being burned
 		*/
 	function _burn(uint256 tokenId) internal virtual {
-			address owner = ownerOf(tokenId);
+		address owner = ownerOf(tokenId);
 
-			_beforeTokenTransfer(owner, address(0), tokenId);
+		_beforeTokenTransfer(owner, address(0), tokenId);
 
-			// Clear approvals
-			_approve(address(0), tokenId);
+		// Clear approvals
+		_approve(address(0), tokenId);
 
-			// Clear metadata (if any)
-			if (bytes(_tokenURIs[tokenId]).length != 0) {
-					delete _tokenURIs[tokenId];
-			}
+		// Clear metadata (if any)
+		if (bytes(_tokenURIs[tokenId]).length != 0) {
+				delete _tokenURIs[tokenId];
+		}
 
-			_holderTokens[owner].remove(tokenId);
+		_holderTokens[owner].remove(tokenId);
 
-			_tokenOwners.remove(tokenId);
+		_tokenOwners.remove(tokenId);
 
-			emit Transfer(owner, address(0), tokenId);
+		emit Transfer(owner, address(0), tokenId);
 	}
 
 	/**
@@ -441,20 +436,20 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* @param tokenId uint256 ID of the token to be transferred
 		*/
 	function _transfer(address from, address to, uint256 tokenId) internal virtual {
-			require(ownerOf(tokenId) == from, "ERC721: transfer of token that is not own");
-			require(to != address(0), "ERC721: transfer to the zero address");
+		require(ownerOf(tokenId) == from, "ERC721: transfer of token that is not own");
+		require(to != address(0), "ERC721: transfer to the zero address");
 
-			_beforeTokenTransfer(from, to, tokenId);
+		_beforeTokenTransfer(from, to, tokenId);
 
-			// Clear approvals from the previous owner
-			_approve(address(0), tokenId);
+		// Clear approvals from the previous owner
+		_approve(address(0), tokenId);
 
-			_holderTokens[from].remove(tokenId);
-			_holderTokens[to].add(tokenId);
+		_holderTokens[from].remove(tokenId);
+		_holderTokens[to].add(tokenId);
 
-			_tokenOwners.set(tokenId, to);
+		_tokenOwners.set(tokenId, to);
 
-			emit Transfer(from, to, tokenId);
+		emit Transfer(from, to, tokenId);
 	}
 
 	/**
@@ -467,8 +462,8 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* it and save gas.
 		*/
 	function _setTokenURI(uint256 tokenId, string memory _tokenURI) internal virtual {
-			require(_exists(tokenId), "ERC721Metadata: URI set of nonexistent token");
-			_tokenURIs[tokenId] = _tokenURI;
+		require(_exists(tokenId), "ERC721Metadata: URI set of nonexistent token");
+		_tokenURIs[tokenId] = _tokenURI;
 	}
 
 	/**
@@ -477,7 +472,7 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		* or to the token ID if {tokenURI} is empty.
 		*/
 	function _setBaseURI(string memory baseURI_) internal virtual {
-			_baseURI = baseURI_;
+		_baseURI = baseURI_;
 	}
 
 	/**
@@ -493,36 +488,36 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 	function _checkOnERC721Received(address from, address to, uint256 tokenId, bytes memory _data)
 			private returns (bool)
 	{
-			if (!to.isContract()) {
-					return true;
-			}
-			// solhint-disable-next-line avoid-low-level-calls
-			(bool success, bytes memory returndata) = to.call(abi.encodeWithSelector(
-					IERC721Receiver(to).onERC721Received.selector,
-					_msgSender(),
-					from,
-					tokenId,
-					_data
-			));
-			if (!success) {
-					if (returndata.length > 0) {
-							// solhint-disable-next-line no-inline-assembly
-							assembly {
-									let returndata_size := mload(returndata)
-									revert(add(32, returndata), returndata_size)
-							}
-					} else {
-							revert("ERC721: transfer to non ERC721Receiver implementer");
-					}
-			} else {
-					bytes4 retval = abi.decode(returndata, (bytes4));
-					return (retval == _ERC721_RECEIVED);
-			}
+		if (!to.isContract()) {
+				return true;
+		}
+		// solhint-disable-next-line avoid-low-level-calls
+		(bool success, bytes memory returndata) = to.call(abi.encodeWithSelector(
+				IERC721Receiver(to).onERC721Received.selector,
+				_msgSender(),
+				from,
+				tokenId,
+				_data
+		));
+		if (!success) {
+				if (returndata.length > 0) {
+						// solhint-disable-next-line no-inline-assembly
+						assembly {
+								let returndata_size := mload(returndata)
+								revert(add(32, returndata), returndata_size)
+						}
+				} else {
+						revert("ERC721: transfer to non ERC721Receiver implementer");
+				}
+		} else {
+				bytes4 retval = abi.decode(returndata, (bytes4));
+				return (retval == _ERC721_RECEIVED);
+		}
 	}
 
 	function _approve(address to, uint256 tokenId) private {
-			_tokenApprovals[tokenId] = to;
-			emit Approval(ownerOf(tokenId), to, tokenId);
+		_tokenApprovals[tokenId] = to;
+		emit Approval(ownerOf(tokenId), to, tokenId);
 	}
 
 	/**
@@ -541,18 +536,37 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 		*/
 	function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal virtual { }
 
-	struct Tx {
-		address from;
-		address to;
-		uint256 tokenId;
-	}
-
 }
 
 contract ERC721 is MvpERC721 {
 
-	constructor() MvpERC721("Mvp", "Mvp") public {
-		_setBaseURI("https://files.smartholder.jp/json-test/");
+	string private _description;
+	string private _externalLink;
+	string private _image;
+
+	constructor(
+		string memory name, string memory symbol, string memory baseURI,
+		string memory description, string memory externalLink, string memory image
+	) MvpERC721(name, symbol) public {
+		_description = description;
+		_externalLink = externalLink;
+		_image = image;
+		_symbol = symbol;
+		_setBaseURI(baseURI);
+	}
+
+	// constructor() MvpERC721("Mvp", "Mvp") public {
+	// 	_setBaseURI("https://files.smartholder.jp/json-test/");
+	// }
+
+	function contractURI() view public returns (string memory uri) {
+		bytes memory a = abi.encodePacked("?name=0xs",          bytes(name()).toHexString());
+		bytes memory b = abi.encodePacked("&description=0xs",   bytes(_description).toHexString());
+		bytes memory c = abi.encodePacked("&image=0xs",         bytes(_image).toHexString());
+		bytes memory d = abi.encodePacked("&external_link=0xs", bytes(_externalLink).toHexString());
+		bytes memory e = abi.encodePacked("&seller_fee_basis_points=0");
+		bytes memory f = abi.encodePacked("&fee_recipient=0x0000000000000000000000000000000000000000");
+		uri = string(abi.encodePacked("https://dao.smartholder.jp/service-api/utils/printJSON", a, b, c, d, e, f));
 	}
 
 	function mintUniqueTokenTo(address to, uint256 tokenId) public {
