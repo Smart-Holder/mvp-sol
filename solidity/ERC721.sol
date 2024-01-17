@@ -3,6 +3,8 @@
 
 pragma solidity ^0.6.12;
 
+pragma experimental ABIEncoderV2;
+
 import './base.sol';
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/IERC721Metadata.sol";
@@ -11,6 +13,7 @@ import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC721/IERC721R
 import "@openzeppelin/contracts-ethereum-package/contracts/utils/EnumerableSet.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/utils/EnumerableMap.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/utils/Strings.sol";
+import "./Strings.sol";
 
 /**
 * @title ERC721 Non-Fungible Token Standard basic implementation
@@ -540,6 +543,8 @@ contract MvpERC721 is IERC721, IERC721Metadata, IERC721Enumerable, MvpBase {
 
 contract ERC721 is MvpERC721 {
 
+	using StringsExp for bytes;
+
 	string private _description;
 	string private _externalLink;
 	string private _image;
@@ -551,7 +556,6 @@ contract ERC721 is MvpERC721 {
 		_description = description;
 		_externalLink = externalLink;
 		_image = image;
-		_symbol = symbol;
 		_setBaseURI(baseURI);
 	}
 
